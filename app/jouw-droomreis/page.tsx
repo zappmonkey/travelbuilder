@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import {
     Dialog,
     DialogBackdrop,
@@ -23,6 +23,8 @@ import {
     XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import {empty} from "@/utils/methods";
+import Loader from "@/components/loader";
 
 const currencies = ['CAD', 'USD', 'AUD', 'EUR', 'GBP']
 const navigation = {
@@ -32,25 +34,25 @@ const navigation = {
             featured: [
                 {
                     name: 'New Arrivals',
-                    href: '#',
+                    href: '/',
                     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-category-01.jpg',
                     imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
                 },
                 {
                     name: 'Basic Tees',
-                    href: '#',
+                    href: '/',
                     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-category-02.jpg',
                     imageAlt: 'Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.',
                 },
                 {
                     name: 'Accessories',
-                    href: '#',
+                    href: '/',
                     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-category-03.jpg',
                     imageAlt: 'Model wearing minimalist watch with black wristband and white watch face.',
                 },
                 {
                     name: 'Carry',
-                    href: '#',
+                    href: '/',
                     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-category-04.jpg',
                     imageAlt: 'Model opening tan leather long wallet with credit card pockets and cash pouch.',
                 },
@@ -61,26 +63,26 @@ const navigation = {
             featured: [
                 {
                     name: 'New Arrivals',
-                    href: '#',
+                    href: '/',
                     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-01.jpg',
                     imageAlt: 'Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.',
                 },
                 {
                     name: 'Basic Tees',
-                    href: '#',
+                    href: '/',
                     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-02.jpg',
                     imageAlt: 'Model wearing light heather gray t-shirt.',
                 },
                 {
                     name: 'Accessories',
-                    href: '#',
+                    href: '/',
                     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-03.jpg',
                     imageAlt:
                         'Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.',
                 },
                 {
                     name: 'Carry',
-                    href: '#',
+                    href: '/',
                     imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-04.jpg',
                     imageAlt: 'Model putting folded cash into slim card holder olive leather wallet with hand stitching.',
                 },
@@ -88,58 +90,58 @@ const navigation = {
         },
     ],
     pages: [
-        { name: 'Groepsreizen', href: '#' },
-        { name: 'Privéreizen', href: '#' },
-        { name: 'Familiereizen', href: '#' },
-        { name: 'Zelfsamenstellen', href: '#' },
-        { name: 'Cruises', href: '#' },
+        { name: 'Groepsreizen', href: '/' },
+        { name: 'Privéreizen', href: '/' },
+        { name: 'Familiereizen', href: '/' },
+        { name: 'Zelfsamenstellen', href: '/jouw-droomreis' },
+        { name: 'Cruises', href: '/' },
     ],
 }
 const categories = [
     {
         name: 'Groepsreizen',
-        href: '#',
+        href: '/',
         imageSrc: 'https://www.nrv.nl/cache/image/201810250930150.Monument%20Valley%20in%20Amerika_1540452615.jpg',
     },
     {
         name: 'Privéreizen',
-        href: '#',
+        href: '/',
         imageSrc: 'https://www.nrv.nl/cache/image/14382663047pealmachupi_1537334166.jpg',
     },
     {
         name: 'Familiereizen',
-        href: '#',
+        href: '/',
         imageSrc: 'https://www.nrv.nl/cache/image/458x1920_d0b4a49f47df6381.webp',
     },
     {
         name: 'Zelfsamenstellen',
-        href: '#',
+        href: '/',
         imageSrc: 'https://www.nrv.nl/cache/image/803x1835_500x1920_0b566bb24ea1244d.webp',
     },
     {
         name: 'Cruises',
-        href: '#',
+        href: '/',
         imageSrc: 'https://www.nrv.nl/cache/image/458x1920_972f2be4f5312c95.webp',
     },
 ]
 const collections = [
     {
         name: 'Handcrafted Collection',
-        href: '#',
+        href: '/',
         imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-collection-01.jpg',
         imageAlt: 'Brown leather key ring with brass metal loops and rivets on wood table.',
         description: 'Keep your phone, keys, and wallet together, so you can lose everything at once.',
     },
     {
         name: 'Organized Desk Collection',
-        href: '#',
+        href: '/',
         imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-collection-02.jpg',
         imageAlt: 'Natural leather mouse pad on white desk next to porcelain mug and keyboard.',
         description: 'The rest of the house will still be a mess, but your desk will look great.',
     },
     {
         name: 'Focus Collection',
-        href: '#',
+        href: '/',
         imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-collection-03.jpg',
         imageAlt: 'Person placing task list card into walnut card holder next to felt carrying case on leather desk pad.',
         description: 'Be more productive than enterprise project managers with a single piece of paper.',
@@ -147,38 +149,80 @@ const collections = [
 ]
 const footerNavigation = {
     shop: [
-        { name: 'Bags', href: '#' },
-        { name: 'Tees', href: '#' },
-        { name: 'Objects', href: '#' },
-        { name: 'Home Goods', href: '#' },
-        { name: 'Accessories', href: '#' },
+        { name: 'Bags', href: '/' },
+        { name: 'Tees', href: '/' },
+        { name: 'Objects', href: '/' },
+        { name: 'Home Goods', href: '/' },
+        { name: 'Accessories', href: '/' },
     ],
     company: [
-        { name: 'Who we are', href: '#' },
-        { name: 'Sustainability', href: '#' },
-        { name: 'Press', href: '#' },
-        { name: 'Careers', href: '#' },
-        { name: 'Terms & Conditions', href: '#' },
-        { name: 'Privacy', href: '#' },
+        { name: 'Who we are', href: '/' },
+        { name: 'Sustainability', href: '/' },
+        { name: 'Press', href: '/' },
+        { name: 'Careers', href: '/' },
+        { name: 'Terms & Conditions', href: '/' },
+        { name: 'Privacy', href: '/' },
     ],
     account: [
-        { name: 'Manage Account', href: '#' },
-        { name: 'Returns & Exchanges', href: '#' },
-        { name: 'Redeem a Gift Card', href: '#' },
+        { name: 'Manage Account', href: '/' },
+        { name: 'Returns & Exchanges', href: '/' },
+        { name: 'Redeem a Gift Card', href: '/' },
     ],
     connect: [
-        { name: 'Contact Us', href: '#' },
-        { name: 'Facebook', href: '#' },
-        { name: 'Instagram', href: '#' },
-        { name: 'Pinterest', href: '#' },
+        { name: 'Contact Us', href: '/' },
+        { name: 'Facebook', href: '/' },
+        { name: 'Instagram', href: '/' },
+        { name: 'Pinterest', href: '/' },
     ],
 }
 
 export default function Example() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [loader, showLoader] = useState(false)
+    const location = React.createRef<HTMLInputElement>();
+    const duration = React.createRef<HTMLInputElement>();
+    const places = React.createRef<HTMLInputElement>();
+
+    const build = async function(): Promise<void> {
+        showLoader(true)
+        let question: string = "Gebaseerd op de data in de file wil ik graag een voorstel voor een rondreis van ";
+        if (!empty(duration.current?.value)) {
+            question = question + (duration.current?.value ?? "") + " door ";
+        }
+        if (!empty(location.current?.value)) {
+            question = question + (location.current?.value ?? "") + " en wil ";
+        }
+        if (!empty(places.current?.value)) {
+            if (isNaN(Number(places.current?.value))) {
+                question = question + (places.current?.value ?? "") + " bezoeken. ";
+            } else {
+                question = question + (places.current?.value ?? "") + " plaatsen bezoeken. ";
+            }
+        }
+        question = question + "Prijzen van externe bronnen toevoegen indien mogelijk."
+        await fetch('http://127.0.0.1:8000/tripbuilder/prompt', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+            body: JSON.stringify({
+                question: question,
+            }),
+        })
+        .then((response) => response.json())
+        .then(async (res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+        .finally(() => showLoader(false));
+    };
 
     return (
         <div className="bg-white">
+            {loader ? <Loader/> : null}
+
             {/* Hero section */}
             <div className="relative bg-gray-900">
                 {/* Decorative image and overlay */}
@@ -198,10 +242,10 @@ export default function Example() {
                             <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 
                                 <div className="flex items-center space-x-6">
-                                    <a href="#" className="text-sm font-medium text-white hover:text-gray-100">
+                                    <a href="/" className="text-sm font-medium text-white hover:text-gray-100">
                                         +31 (0)70 3076700
                                     </a>
-                                    <a href="#" className="text-sm font-medium text-white hover:text-gray-100">
+                                    <a href="/" className="text-sm font-medium text-white hover:text-gray-100">
                                         info@nrv.nl
                                     </a>
                                 </div>
@@ -215,7 +259,7 @@ export default function Example() {
                                     <div className="flex h-16 items-center justify-between">
                                         {/* Logo (lg+) */}
                                         <div className="hidden lg:flex lg:flex-1 lg:items-center">
-                                            <a href="#">
+                                            <a href="/">
                                                 <span className="sr-only">NRV</span>
                                                 <img
                                                     alt=""
@@ -292,14 +336,14 @@ export default function Example() {
                                             </button>
 
                                             {/* Search */}
-                                            <a href="#" className="ml-2 p-2 text-white">
+                                            <a href="/" className="ml-2 p-2 text-white">
                                                 <span className="sr-only">Zoeken</span>
                                                 <MagnifyingGlassIcon aria-hidden="true" className="size-6" />
                                             </a>
                                         </div>
 
                                         {/* Logo (lg-) */}
-                                        <a href="#" className="lg:hidden">
+                                        <a href="/" className="lg:hidden">
                                             <span className="sr-only">Your Company</span>
                                             <img
                                                 alt=""
@@ -312,17 +356,17 @@ export default function Example() {
 
                                             <div className="flex items-center lg:ml-8">
                                                 {/* Help */}
-                                                <a href="#" className="p-2 text-white lg:hidden">
+                                                <a href="/" className="p-2 text-white lg:hidden">
                                                     <span className="sr-only">Help</span>
                                                     <QuestionMarkCircleIcon aria-hidden="true" className="size-6" />
                                                 </a>
-                                                <a href="#" className="hidden text-sm font-medium text-white lg:block">
+                                                <a href="/" className="hidden text-sm font-medium text-white lg:block">
                                                     Hulp nodig?
                                                 </a>
 
                                                 {/* Cart */}
                                                 <div className="ml-4 flow-root lg:ml-8">
-                                                    <a href="#" className="group -m-2 flex items-center p-2">
+                                                    <a href="/" className="group -m-2 flex items-center p-2">
                                                         <ShoppingBagIcon aria-hidden="true" className="size-6 shrink-0 text-white" />
                                                         <span className="ml-2 text-sm font-medium text-white">0</span>
                                                         <span className="sr-only">items in cart, view bag</span>
@@ -337,17 +381,64 @@ export default function Example() {
                     </nav>
                 </header>
 
-                <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 py-32 text-center sm:py-64 lg:px-0">
-                    <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">Laat ons je perfecte reis samenstellen!</h1>
-                    <p className="mt-4 text-xl text-white">
-                        Beantwoord maximaal 5 vragen en wij gaan direct aan de slag en stellen de perfect reis voor je samen! Een droomreis die uitkomt!
-                    </p>
-                    <a
-                        href="/jouw-droomreis"
+                <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 py-32 text-center lg:px-0">
+                    <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">Jouw droomreis in een paar minuten voor je geregeld!</h1>
+                    <form className="w-[480px] flex flex-col">
+                        <div>
+                            <label htmlFor="location" className="block text-md font-bold text-orange-600 pt-10 text-left">
+                                Waar wil je naar toe?
+                            </label>
+                            <div className="mt-2">
+                                <input
+                                    id="location"
+                                    name="location"
+                                    type="location"
+                                    ref={location}
+                                    placeholder="bv. Costa Rica of Thailand en Vietnam"
+                                    aria-describedby="location-description"
+                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-md"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="duration" className="block text-md font-bold text-orange-600 pt-5 text-left">
+                                Hoe lang wil je reizen?
+                            </label>
+                            <div className="mt-2">
+                                <input
+                                    id="duration"
+                                    name="duration"
+                                    type="duration"
+                                    ref={duration}
+                                    placeholder="bv. 3 weken of 21 dagen"
+                                    aria-describedby="duration-description"
+                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-md"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="places" className="block text-md font-bold text-orange-600 pt-5 text-left">
+                                Hoeveel of welke plaatsen zou wil je bezoeken?
+                            </label>
+                            <div className="mt-2">
+                                <input
+                                    id="places"
+                                    name="places"
+                                    type="places"
+                                    ref={places}
+                                    placeholder="bv. 5 of San José, Arenal, Puerto Viejo"
+                                    aria-describedby="places-description"
+                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-md"
+                                />
+                            </div>
+                        </div>
+                    </form>
+                    <button
+                        onClick={() => build()}
                         className="mt-8 inline-block rounded-md border border-transparent bg-orange-600 px-8 py-3 text-base text-white font-bold hover:bg-orange-500"
                     >
-                        Start je droomreis nu!
-                    </a>
+                        Klaar voor je droomreis?
+                    </button>
                 </div>
             </div>
 
@@ -358,7 +449,7 @@ export default function Example() {
                         <h2 id="category-heading" className="text-2xl font-bold tracking-tight text-gray-900">
                             Bekijk per type reis
                         </h2>
-                        <a href="#" className="hidden text-sm font-semibold text-orange-600 hover:text-orange-500 sm:block">
+                        <a href="/" className="hidden text-sm font-semibold text-orange-600 hover:text-orange-500 sm:block">
                             Bekijk alle reis types
                             <span aria-hidden="true"> &rarr;</span>
                         </a>
@@ -390,7 +481,7 @@ export default function Example() {
                     </div>
 
                     <div className="mt-6 px-4 sm:hidden">
-                        <a href="#" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
+                        <a href="/" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
                             Browse all categories
                             <span aria-hidden="true"> &rarr;</span>
                         </a>
@@ -422,7 +513,7 @@ export default function Example() {
                                     really nice desk setup.
                                 </p>
                                 <a
-                                    href="#"
+                                    href="/"
                                     className="mt-8 block w-full rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto"
                                 >
                                     Shop Workspace
@@ -480,7 +571,7 @@ export default function Example() {
                                     undeniable urge to fill empty circles.
                                 </p>
                                 <a
-                                    href="#"
+                                    href="/"
                                     className="mt-8 block w-full rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-gray-900 hover:bg-gray-100 sm:w-auto"
                                 >
                                     Shop Focus
