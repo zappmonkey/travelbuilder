@@ -25,8 +25,8 @@ import {
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import {empty} from "@/utils/methods";
 import Loader from "@/components/loader";
+import TripOverview from "@/components/trip_overview";
 
-const currencies = ['CAD', 'USD', 'AUD', 'EUR', 'GBP']
 const navigation = {
     categories: [
         {
@@ -179,15 +179,30 @@ const footerNavigation = {
 export default function Example() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [loader, showLoader] = useState(false)
+    const [overview, setOverview] = useState(false)
+
+    const occupation = React.createRef<HTMLInputElement>();
     const location = React.createRef<HTMLInputElement>();
     const duration = React.createRef<HTMLInputElement>();
     const places = React.createRef<HTMLInputElement>();
+
+    const closeOverview = function() {
+        setOverview(false)
+    };
+
+    const refresh = function() {
+        setOverview(false)
+        build()
+    };
 
     const build = async function(): Promise<void> {
         showLoader(true)
         let question: string = "Gebaseerd op de data in de file wil ik graag een voorstel voor een rondreis van ";
         if (!empty(duration.current?.value)) {
-            question = question + (duration.current?.value ?? "") + " door ";
+            question = question + (duration.current?.value ?? "") + " met ";
+        }
+        if (!empty(occupation.current?.value)) {
+            question = question + (occupation.current?.value ?? "") + " door ";
         }
         if (!empty(location.current?.value)) {
             question = question + (location.current?.value ?? "") + " en wil ";
@@ -211,7 +226,7 @@ export default function Example() {
         })
         .then((response) => response.json())
         .then(async (res) => {
-            console.log(res);
+            setOverview(res)
         })
         .catch((err) => {
             console.error(err)
@@ -222,7 +237,7 @@ export default function Example() {
     return (
         <div className="bg-white">
             {loader ? <Loader/> : null}
-
+            {overview ? <TripOverview trip={overview} closeAction={closeOverview} refreshAction={refresh}/> : null}
             {/* Hero section */}
             <div className="relative bg-gray-900">
                 {/* Decorative image and overlay */}
@@ -386,6 +401,22 @@ export default function Example() {
                     <form className="w-[480px] flex flex-col">
                         <div>
                             <label htmlFor="location" className="block text-md font-bold text-orange-600 pt-10 text-left">
+                                Met wie ga je reizen? <i>(Beschrijf de groep)</i>
+                            </label>
+                            <div className="mt-2">
+                                <input
+                                    id="occupation"
+                                    name="occupation"
+                                    type="occupation"
+                                    ref={occupation}
+                                    placeholder="bv. 2 volwassenen en 2 kinderen"
+                                    aria-describedby="occupation-description"
+                                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-md"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="location" className="block text-md font-bold text-orange-600 pt-5 text-left">
                                 Waar wil je naar toe?
                             </label>
                             <div className="mt-2">
@@ -437,7 +468,7 @@ export default function Example() {
                         onClick={() => build()}
                         className="mt-8 inline-block rounded-md border border-transparent bg-orange-600 px-8 py-3 text-base text-white font-bold hover:bg-orange-500"
                     >
-                        Klaar voor je droomreis?
+                        Bekijk nu jouw droomreis?
                     </button>
                 </div>
             </div>

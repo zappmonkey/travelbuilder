@@ -19,7 +19,7 @@ export default function Loader() {
                         className="relative transform overflow-hidden rounded-lg bg-gray-800 p-4 text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-sm sm:p-6 data-closed:sm:translate-y-0 data-closed:sm:scale-95"
                     >
                         <div>
-                            <div className="mx-auto flex items-center justify-center rounded-full">
+                            <div className="mx-auto flex items-center justify-center rounded-full animate-bounce">
                                 <span className="sr-only">NRV</span>
                                 <img
                                     alt=""
