@@ -93,7 +93,7 @@ export default function TripOverview(props: Props) {
                                                         {day.accommodation ? day.accommodation.description : day.excursion.description}
                                                     </td>
                                                     <td className="text-sm px-3 align-text-top pl-4 py-3.5 text-left text-white sm:pr-6 lg:pr-8">
-                                                        {day.accommodation && day.accommodation.price ? "€ " : "Op aanvraag"}
+  {day.accommodation && day.accommodation.price  ? "€ " : "Op aanvraag"}
                                                         {day.accommodation && day.accommodation.price ?
                                                             (day.accommodation.price.price_per_night ? day.accommodation.price.price_per_night * day.nights :
                                                                 (day.accommodation.price.price_per_person ? day.accommodation.price.price_per_person + " p.p." :
@@ -136,6 +136,7 @@ export default function TripOverview(props: Props) {
                                     </div>
                                 </div>
                             </div>
+                            {/*{JSON.stringify(props.trip, null, 2)}*/}
                         </div>
                     </DialogPanel>
                 </div>

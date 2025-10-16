@@ -197,7 +197,7 @@ export default function Example() {
 
     const build = async function(): Promise<void> {
         showLoader(true)
-        let question: string = "Gebaseerd op de data in de file wil ik graag een voorstel voor een rondreis van ";
+        let question: string = "Gebaseerd op de accommodaties en excursies in de json file inclusief vluchten plus huurauto wil ik graag een voorstel voor een rondreis van ";
         if (!empty(duration.current?.value)) {
             question = question + (duration.current?.value ?? "") + " met ";
         }
