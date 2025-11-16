@@ -10,6 +10,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
+    "cookie-signature": "^1.2.2",
     "next": "15.5.4",
     "react": "19.1.0",
     "react-date-object": "^2.1.9",
@@ -18,6 +19,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/cookie-signature": "^1.1.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tailwindcss": "^4",
