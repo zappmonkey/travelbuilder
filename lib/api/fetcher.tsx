@@ -27,7 +27,7 @@ class Fetcher
         return this._fetch('PUT', url, body);
     }
 
-    async _fetch(method: string, url: string, body?: unknown, autoRefresh: boolean = true): Promise<any>
+    async _fetch(method: string, url: string, body?: unknown, autoRefresh: boolean = true, cache: boolean = false): Promise<any>
     {
         let sessionData: SessionData|undefined|null = await session().all();
         if (!await this._checkSession(sessionData)) {
@@ -127,7 +127,7 @@ class Fetcher
         if (response) {
             sessionData.accessToken = response.access_token;
             sessionData.refreshToken = response.refresh_token;
-            sessionData.expires = response.expires;
+            sessionData.expires = Number(response.expires);
             await session().setAll(sessionData);
             this._refreshing = false;
             return true;
@@ -148,6 +148,10 @@ class Fetcher
         }
         if (empty(sessionData.accessToken) || empty(sessionData.refreshToken)) {
             return false
+        }
+        console.log(sessionData.expires, Math.floor(Date.now() / 1000) + 300);
+        if (sessionData.expires && sessionData.expires < Math.floor(Date.now() / 1000) + 300) {
+            return false;
         }
         return true
     }

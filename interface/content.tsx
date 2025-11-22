@@ -78,9 +78,9 @@ export interface IMenuItem {
 }
 
 export interface IEntity {
-    id?: bigint
-    code?: string
-    type?: string
+    id: bigint
+    code: string
+    type: string
 }
 
 export interface IPage {

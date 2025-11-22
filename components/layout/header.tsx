@@ -141,39 +141,32 @@ export default function Header(props: Props) {
                         <TabGroup className="mt-2">
                             <div className="border-b border-gray-200">
                                 <TabList className="-mb-px flex space-x-8 px-4">
-                                    {navigation.categories.map((category) => (
+                                    {props.generic.menu?.items?.menu_top_new.items ? objToArray(props.generic.menu?.items?.menu_top_new.items).map((item: IMenuItem) => (
                                         <Tab
-                                            key={category.name}
-                                            className="flex-1 border-b-2 border-transparent px-1 py-4 text-base font-medium whitespace-nowrap text-gray-900 data-selected:border-indigo-600 data-selected:text-indigo-600"
+                                            key={item.id}
+                                            className="flex-1 border-b-2 border-transparent px-1 py-4 text-base font-medium whitespace-nowrap text-gray-900 data-selected:border-nrv-orange data-selected:text-nrv-orange"
                                         >
-                                            {category.name}
+                                            {item.label}
                                         </Tab>
-                                    ))}
+                                    )): null}
                                 </TabList>
                             </div>
                             <TabPanels as={Fragment}>
-                                {navigation.categories.map((category) => (
-                                    <TabPanel key={category.name} className="space-y-12 px-4 py-6">
+                                {props.generic.menu?.items?.menu_top_new.items ? objToArray(props.generic.menu?.items?.menu_top_new.items).map((menu: IMenuItem) => (
+                                    <TabPanel key={menu.id} className="space-y-12 px-4 py-6">
                                         <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-                                            {category.featured.map((item) => (
-                                                <div key={item.name} className="group relative">
-                                                    <img
-                                                        alt={item.imageAlt}
-                                                        src={item.imageSrc}
-                                                        className="aspect-square w-full rounded-md bg-gray-100 object-cover group-hover:opacity-75"
-                                                    />
-                                                    <a href={item.href} className="mt-6 block text-sm font-medium text-gray-900">
+                                        {objToArray(menu.items).map((group: IMenuItem) => (
+                                            <div key={group.id} className="group relative">
+                                                {objToArray(group.items).map((item: IMenuItem) => (
+                                                    <a key={item.id} href={item.url} className="mt-6 block text-sm font-medium text-gray-900">
                                                         <span aria-hidden="true" className="absolute inset-0 z-10" />
-                                                        {item.name}
+                                                        {item.label}
                                                     </a>
-                                                    <p aria-hidden="true" className="mt-1 text-sm text-gray-500">
-                                                        Shop now
-                                                    </p>
-                                                </div>
-                                            ))}
+                                                ))}
+                                            </div>))}
                                         </div>
                                     </TabPanel>
-                                ))}
+                                )): null}
                             </TabPanels>
                         </TabGroup>
 
@@ -225,10 +218,10 @@ export default function Header(props: Props) {
                                 ))}
                                 {objToArray(props.generic.content?.ban_new_logos.items).map((item: IContent) => (
                                     <a key={item.id} href={item.link?.url} className="text-sm font-medium text-white hover:text-gray-100 px-3">
-                                        {item.title == 'sgr' ? <Image src="/sgr.svg" alt={item.title} width={20} height={20}/>
+                                        {item.title == 'sgr' ? <Image src="/sgr.svg" alt={item.title} width={0} height={0} className="w-5 h-auto"/>
                                             : (
-                                                item.title == 'anvr' ? <Image src="/anvr.svg" alt={item.title} width={20} height={20}/>
-                                                : <Image src="/calamiteitenfonds.svg" alt={item.title ? item.title : ""} width={20} height={20}/>
+                                                item.title == 'anvr' ? <Image src="/anvr.svg" alt={item.title} width={0} height={0} className="w-5 h-auto"/>
+                                                : <Image src="/calamiteitenfonds.svg" alt={item.title ? item.title : ""} width={0} height={0} className="w-5 h-auto"/>
                                         )}
                                     </a>
                                 ))}

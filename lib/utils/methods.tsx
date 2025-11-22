@@ -99,3 +99,14 @@ export function stringToDate(date: string): Date
 {
     return new Date(date);
 }
+
+export function objToArray(obj: Dict<any>|undefined): any[] {
+    let list: any[] = [];
+    if (obj == undefined) {
+        return list;
+    }
+    for (const key in obj) {
+        list.push(obj[key]);
+    }
+    return list;
+}

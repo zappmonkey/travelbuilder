@@ -1,16 +1,24 @@
 'use server'
 
 import React from "react";
-import {generic} from "@/lib/api/cms";
+import {generic, package_group} from "@/lib/api/cms";
 import Print from "@/components/ui/dev/print";
+import {GenericContent, IPage} from "@/interface/content";
+import ProductPage from "@/components/pages/product";
 
 type Props = {
-    url: string
+    page: IPage,
+    generic: GenericContent,
 }
 
-export default async function Page(props: Props) {
-    // const generic_content = await generic()
+export default async function Page(props: Props)
+{
+    switch (props.page.entity?.type) {
+        case 'package_group':
+            const content = await package_group(props.page.entity?.id);
+            return <ProductPage content={content} generic={props.generic} />
+    }
     return (
-        <Print context={props}/>
+        <Print context={props.page}/>
     )
 }
