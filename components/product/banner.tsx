@@ -1,3 +1,6 @@
+import InfoHover from "@/components/ui/info";
+import Print from "@/components/ui/dev/print";
+
 type Props = {
     product: any
 }
@@ -6,8 +9,40 @@ export function Banner(props: Props) {
         <>
             <div aria-hidden="true" className="relative">
                 <div className="relative mx-auto max-w-7xl">
-                    <div className="absolute top-10 right-10 w-40 z-10 bg-nrv-orange p-4 rounded-md">
-                        v.a. <span className="font-medium text-3xl">{props.product.prices.lowest.price_per_person}</span>
+                    <div className="absolute top-10 right-10 w-70 z-10 bg-nrv-orange p-4 rounded-md text-right">
+                        v.a.
+                        <span className="font-medium text-3xl">
+                            {props.product.prices.lowest.price_per_person}
+                            <InfoHover>
+                                <div className="p-4">
+                                    <h3 className="pb-4">Prijs p.p. is gebaseerd op</h3>
+                                    <div className="flex items-center justify-between">
+                                        <dt className="pr-4 text-sm text-white/50">Vertrekdatum</dt>
+                                        <dd className="text-sm font-medium text-white">{props.product.prices.lowest.date}</dd>
+                                    </div>
+                                    <div className="flex items-center justify-between pt-4">
+                                        <dt className="pr-4 flex items-center text-sm text-white/50">Reisduur</dt>
+                                        <dd className="text-sm font-medium text-white">{props.product.prices.lowest.duration + 1} dagen</dd>
+                                    </div>
+                                    <div className="flex items-center justify-between pt-4">
+                                        <dt className="pr-4 text-sm text-white/50">Aantal personen</dt>
+                                        <dd className="font-medium text-sm text-white">{props.product.prices.lowest.adults}</dd>
+                                    </div>
+                                </div>
+                            </InfoHover>
+                        </span>
+
+                        {props.product.tags && props.product.tags.acties.items && props.product.tags.acties.items[0].content ?
+                            <div className="bg-white py-2 px-4 text-nrv-orange font-medium mt-4 rounded-md text-center">
+                                <span className="uppercase">{props.product.tags.acties.items[0].content.alg.items[0].title}</span>
+                                {props.product.tags.acties.items[0].content.voorw ? <InfoHover className="relative top-1">
+                                    <div className="p-4 text-left">
+                                        <h3 className="pb-4">{props.product.tags.acties.items[0].content.voorw.items[0].title}</h3>
+                                        <p className="whitespace-pre-wrap">{props.product.tags.acties.items[0].content.voorw.items[0].description}</p>
+                                    </div>
+                                </InfoHover> : null}
+                            </div>
+                        : null}
                     </div>
                 </div>
                 <img

@@ -113,7 +113,7 @@ export default function Header(props: Props) {
         return list;
     }
     return (
-        <div className="bg-white">
+        <div className="bg-white sticky top-0 z-10">
             {/* Mobile menu */}
             <Dialog open={open} onClose={setOpen} className="relative z-40 lg:hidden">
                 <DialogBackdrop

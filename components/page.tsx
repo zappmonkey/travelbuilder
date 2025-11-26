@@ -15,8 +15,8 @@ export default async function Page(props: Props)
 {
     switch (props.page.entity?.type) {
         case 'package_group':
-            const content = await package_group(props.page.entity?.id);
-            return <ProductPage content={content} generic={props.generic} />
+            const product = await package_group(props.page.entity?.id);
+            return <ProductPage product={product} generic={props.generic} />
     }
     return (
         <Print context={props.page}/>
