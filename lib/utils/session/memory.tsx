@@ -30,11 +30,7 @@ export class MemoryStore implements Store {
             sess = fs.readFileSync(this.getFilePath(sid), 'utf8');
         }
         if (sess) {
-            const session = JSON.parse(sess, (key, value) => {
-                if (key === 'expires') return new Date(value);
-                return value;
-            }) as SessionData;
-
+            const session = JSON.parse(sess) as SessionData;
             // destroy expired session
             if (
                 session.cookie?.expires &&
