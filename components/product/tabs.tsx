@@ -20,7 +20,7 @@ export default function ProductTabs(props: Props): any
         },
         {
             name: 'Data & Prijzen',
-            children: <Wizard product={props.product}/>
+            children: <Wizard product={props.product} generic={props.generic}/>
         },
         {
             name: 'Dagprogramma',
