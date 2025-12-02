@@ -10,7 +10,7 @@ function _twig_print(value: any, hide: boolean) {
     if (hide === true) {
         vis = "display: none;";
     }
-    return "<pre style='font-size: 70%;" + vis + "'>" + json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+    return "<pre style='font-size: 70%; color: gray; " + vis + "'>" + json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
         var clr = 'magenta';
         if (/^"/.test(match)) {
             if (/:$/.test(match)) {

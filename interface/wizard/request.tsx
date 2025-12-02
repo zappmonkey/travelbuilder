@@ -5,6 +5,8 @@ export interface Request {
     product: Product|undefined;
     occupation: Occupation|undefined;
     date: string|undefined;
+    dates_around: number|undefined;
     duration: number|undefined;
+    durations_around: number|undefined;
     calls: string[]
 }

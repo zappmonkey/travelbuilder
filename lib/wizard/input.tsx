@@ -7,6 +7,7 @@ export class Input {
     _display_date: string|undefined = undefined;
     _duration: number|undefined = undefined;
     _ages: number[]|undefined = undefined;
+    private _step: number = 1;
 
     constructor(id: number, type: string = 'PACKAGE') {
         this._id = id;
@@ -21,6 +22,16 @@ export class Input {
         const session = await getSession();
         if (!session || session.wizard_input === undefined) {
             return;
+        }
+        const input = JSON.parse(session.wizard_input);
+        if (input._id !== this._id) {
+            this._ages = input._ages ? input._ages : [30, 30];
+        } else {
+            let property: keyof typeof input;
+            for (property in input) {
+                // @ts-ignore
+                this[property] = input[property];
+            }
         }
     }
 
@@ -68,5 +79,27 @@ export class Input {
 
     set ages(value: number[] | undefined) {
         this._ages = value;
+    }
+
+    get step(): number {
+        return this._step;
+    }
+
+    set step(value: number) {
+        this._step = value;
+    }
+
+    simple()
+    {
+        let input = JSON.parse(JSON.stringify(this))
+        let simple = {};
+        let property: keyof typeof input;
+        let new_property: string;
+        for (property in input) {
+            new_property = property.substring(0, 1) === '_' ? property.substring(1) : property;
+            // @ts-ignore
+            simple[new_property] = input[property];
+        }
+        return simple;
     }
 }

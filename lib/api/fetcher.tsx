@@ -1,7 +1,4 @@
 import { api_config } from '@/lib/api/api_config'
-import {empty} from "@/lib/utils/methods";
-import {SessionData} from "@/lib/utils/session";
-
 import apiSession, {defaultSession} from "@/lib/api/session";
 
 class Fetcher
@@ -40,8 +37,6 @@ class Fetcher
                 await this._login()
             }
         }
-        console.log(url, session.get());
-        // return null;
 
         let requestOptions = null;
         if (body && !(body instanceof FormData) && Object.keys(body).length > 0) {
@@ -123,9 +118,6 @@ class Fetcher
             this._refreshing = false;
             return true;
         }
-        sessionData.accessToken = '';
-        sessionData.refreshToken = '';
-        sessionData.expires = 0;
         session.update(sessionData);
         this._refreshing = false;
         return false;
