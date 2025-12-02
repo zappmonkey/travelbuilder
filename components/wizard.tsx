@@ -3,6 +3,7 @@
 import Print from "@/components/ui/dev/print";
 import {wizard} from "@/lib/api/wizard";
 import {GenericContent} from "@/interface/content";
+import {Input} from "@/lib/wizard/input";
 type Props = {
     product: any
     generic: GenericContent
@@ -10,29 +11,36 @@ type Props = {
 
 export default async function Wizard(props: Props)
 {
+    const input = new Input(Number(props.product.id));
+    await input.read()
+    let date = input.date;
+    if (date === undefined) {
+        date = input.display_date === undefined ? props.product.prices.lowest.date : input.display_date;
+    }
+    let calls = [
+        "price",
+        "selection",
+    ];
+    if (input.date !== undefined) {
+        calls.push("book_check");
+    }
+    await input.write();
     let data = await wizard({
         "product": {
-            "id": props.product.id,
+            "id": input.id,
             "type": "PACKAGE"
         },
         "occupation": {
             "adults": undefined,
             "children": undefined,
             "babies": undefined,
-            "ages": [
-                30,
-                30
-            ]
+            "ages": input.ages
         },
-        "date": "2025-12-13",
+        "date": date,
         "duration": undefined,
-        "calls": [
-            "price",
-            "selection",
-            "book_check"
-        ]
+        "calls": calls
     })
     return (
-        <Print context={data}/>
+        <Print context={[props.product.prices.lowest, data]}/>
     )
 }

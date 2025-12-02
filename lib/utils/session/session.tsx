@@ -94,7 +94,6 @@ export class AppSession<T extends SessionRecord = SessionRecord>
     async all(): Promise<SessionData<T> | null | undefined> {
         await this._initID();
         const data = await this.store?.get(this.sid);
-        console.log('session data', data);
         return data ?? {};
     }
     async get(key: string | keyof T): Promise<any> {

@@ -241,7 +241,7 @@ export default function Header(props: Props) {
                                             <img
                                                 alt=""
                                                 src={props.generic.content?.ban_new_mainlogo.items?.[0].images?.[0].url}
-                                                className="h-20 w-auto mt-10 border-white rounded-[50%] border-4"
+                                                className="h-20 w-auto mt-6 border-white rounded-[50%] border-4"
                                             />
                                         </a>
                                     </div>
@@ -322,7 +322,7 @@ export default function Header(props: Props) {
                                         <img
                                             alt=""
                                             src={props.generic.content?.ban_new_mainlogo.items?.[0].images?.[0].url}
-                                            className="h-20 w-auto mt-10 border-white rounded-[50%] border-4"
+                                            className="h-20 w-auto mt-8 border-white rounded-[50%] border-4"
                                         />
                                     </a>
 

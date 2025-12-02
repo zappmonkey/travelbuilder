@@ -1,7 +1,8 @@
-import {defaultSession, session} from '@/lib/utils/session';
 import { api_config } from '@/lib/api/api_config'
 import {empty} from "@/lib/utils/methods";
 import {SessionData} from "@/lib/utils/session";
+
+import apiSession, {defaultSession} from "@/lib/api/session";
 
 class Fetcher
 {
@@ -29,22 +30,17 @@ class Fetcher
 
     async _fetch(method: string, url: string, body?: unknown, autoRefresh: boolean = true): Promise<any>
     {
-        let sessionData: SessionData|undefined|null = await session().all();
-        if (!await this._checkSession(sessionData)) {
+        const session = apiSession();
+        if (!session.isValid()) {
             if (this._refreshing) {
                 setTimeout(async () => {
-                    console.log('Wait for refresh of token');
-                    sessionData = await session().all();
+                    console.log('Waited for refresh of token');
                 }, 1000);
             } else {
                 await this._login()
-                sessionData = await session().all();
             }
         }
-        if (!sessionData) {
-            sessionData = defaultSession
-        }
-        console.log(url, sessionData);
+        console.log(url, session.get());
         // return null;
 
         let requestOptions = null;
@@ -53,7 +49,7 @@ class Fetcher
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + sessionData.accessToken
+                    'Authorization': 'Bearer ' + session.accessToken()
                 },
                 body: JSON.stringify(body)
             };
@@ -61,7 +57,7 @@ class Fetcher
             requestOptions = {
                 method: method,
                 headers: {
-                    'Authorization': 'Bearer ' + sessionData.accessToken
+                    'Authorization': 'Bearer ' + session.accessToken()
                 },
                 body: body
             };
@@ -70,7 +66,7 @@ class Fetcher
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + sessionData.accessToken
+                    'Authorization': 'Bearer ' + session.accessToken()
                 }
             };
         }
@@ -87,37 +83,32 @@ class Fetcher
 
     async _refresh(): Promise<boolean>
     {
-        this._refreshing = true;
-        let sessionData: SessionData|undefined|null = await session().all();
-        if (!await this._checkSession(sessionData)) {
+        const session = apiSession();
+        if (session.refreshToken() === undefined) {
             return await this._login()
         }
-        if (!sessionData) {
-            sessionData = defaultSession
-        }
+
         const response = await this._fetch('POST', 'auth/refresh_token', {
-            'access_token': sessionData.accessToken,
-            'refresh_token': sessionData.refreshToken,
+            'access_token': session.accessToken(),
+            'refresh_token': session.refreshToken(),
         }, false);
+        let sessionData = defaultSession;
         if (response) {
             sessionData.accessToken = response.access_token;
             sessionData.refreshToken = response.refresh_token;
             sessionData.expires = response.expires;
-            await session().setAll(sessionData);
+            session.update(sessionData);
             this._refreshing = false;
             return true;
         }
-        sessionData.accessToken = '';
-        sessionData.refreshToken = '';
-        sessionData.expires = 0;
-        sessionData.isLoggedIn = false;
-        await session().setAll(sessionData);
+        session.update(sessionData);
         this._refreshing = false;
         return false;
     }
 
     async _login(): Promise<boolean>
     {
+        const session = apiSession();
         this._refreshing = true;
         const sessionData = defaultSession;
         const response = await this._fetch('POST', 'auth/token', {
@@ -128,32 +119,16 @@ class Fetcher
             sessionData.accessToken = response.access_token;
             sessionData.refreshToken = response.refresh_token;
             sessionData.expires = Number(response.expires);
-            await session().setAll(sessionData);
+            session.update(sessionData);
             this._refreshing = false;
             return true;
         }
         sessionData.accessToken = '';
         sessionData.refreshToken = '';
         sessionData.expires = 0;
-        sessionData.isLoggedIn = false;
-        await session().setAll(sessionData);
+        session.update(sessionData);
         this._refreshing = false;
         return false;
-    }
-
-    async _checkSession(sessionData: SessionData|undefined|null): Promise<boolean>
-    {
-        if (!sessionData) {
-            return false
-        }
-        if (empty(sessionData.accessToken) || empty(sessionData.refreshToken)) {
-            return false
-        }
-
-        if (!sessionData.expires || sessionData.expires < Math.floor(Date.now() / 1000) - 300) {
-            return false;
-        }
-        return true
     }
 }
 

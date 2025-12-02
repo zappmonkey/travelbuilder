@@ -1,17 +1,11 @@
 import nextAppSession from '@/lib/utils/session/session';
 
 export interface SessionData {
-    accessToken?: string;
-    refreshToken?: string;
-    expires?: number;
-    isLoggedIn: boolean;
+    wizard_input?: string;
 }
 
 export const defaultSession: SessionData = {
-    accessToken: undefined,
-    refreshToken: undefined,
-    expires: undefined,
-    isLoggedIn: false,
+    wizard_input: undefined,
 }
 
 export const session = nextAppSession<SessionData>({

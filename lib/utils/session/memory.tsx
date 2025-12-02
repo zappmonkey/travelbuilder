@@ -63,6 +63,6 @@ export class MemoryStore implements Store {
     }
 
     getFilePath(sid: string): string {
-        return process.cwd() + '/.sessions/' + sid
+        return process.cwd() + '/.sessions/' + sid + '.json';
     }
 }
