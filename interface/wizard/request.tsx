@@ -1,7 +1,7 @@
 import {Product} from "@/interface/wizard/product"
 import {Occupation} from "@/interface/wizard/occupation"
 
-export interface Request {
+export interface WizardRequest {
     product: Product|undefined;
     occupation: Occupation|undefined;
     date: string|undefined;

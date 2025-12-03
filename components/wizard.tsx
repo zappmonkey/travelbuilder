@@ -1,56 +1,93 @@
-'use server'
+'use client'
 
-import Print from "@/components/ui/dev/print";
-import {wizard} from "@/lib/api/wizard";
 import {GenericContent} from "@/interface/content";
-import {Input} from "@/lib/wizard/input";
+import {InputSimple} from "@/lib/wizard/input";
 import Calendar from "@/components/wizard/matrix/calendar";
+import Adults from "@/components/wizard/occupation/adults";
+import Children from "@/components/wizard/occupation/children";
+import Babies from "@/components/wizard/occupation/babies";
+import {useState} from "react";
+
 type Props = {
     product: any
-    generic: GenericContent
+    generic: GenericContent,
+    input: any
 }
 
-export default async function Wizard(props: Props)
+export default function Wizard(props: Props)
 {
-    const input = new Input(Number(props.product.id));
-    await input.read()
-    let date = input.date;
-    let duration = input.duration;
-    if (date === undefined) {
-        date = input.display_date === undefined ? props.product.prices.lowest.date : input.display_date;
+    const [wizard, setWizard] = useState<any|null>(null);
+    let input: InputSimple = props.input;
+    if (wizard !== null) {
+        input = wizard.input;
     }
-    if (duration === undefined) {
-        duration = props.product.prices.lowest.duration;
+    const update = async function(input: InputSimple): Promise<void> {
+        input.calls = ['price', 'selection'];
+        let url = `/api/wizard`
+        await fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(input)
+        })
+        .then((response) => response.json())
+        .then(async (data) => {
+            setWizard(data);
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+    };
+
+    if (wizard === null) {
+        update(input);
+        return (<></>)
     }
-    let calls = [
-        "price",
-        "selection",
-    ];
-    if (input.date !== undefined) {
-        calls.push("book_check");
-    }
-    await input.write();
-    let data = await wizard({
-        "product": {
-            "id": input.id,
-            "type": "PACKAGE"
-        },
-        "occupation": {
-            "adults": undefined,
-            "children": undefined,
-            "babies": undefined,
-            "ages": input.ages
-        },
-        "date": date,
-        "dates_around": 365,
-        "duration": duration,
-        "durations_around": undefined,
-        "calls": calls
-    })
+    const updateAges = function(adults: number, children: number, babies: number): void {
+        const ages = [];
+        input.adults = adults;
+        input.children = children;
+        input.babies = babies;
+        for (let i = 0; i < adults; i++) {
+            ages.push(30);
+        }
+        for (let i = 0; i < children; i++) {
+            ages.push(8);
+        }
+        for (let i = 0; i < babies; i++) {
+            ages.push(0);
+        }
+        input.ages = ages;
+    };
+
+    const onChangeAdults = function(value: string) {
+        updateAges(Number(value), input.children, input.babies);
+        update(input);
+    };
+
+    const onChangeChildren = function(value: string) {
+        updateAges(input.adults, Number(value), input.babies);
+        update(input);
+    };
+
+    const onChangeBabies = function(value: string) {
+        updateAges(input.adults, input.children, Number(value));
+        update(input);
+    };
+
     return (
         <>
-            <Calendar prices={data.price.prices} input={input.simple()} />
-            {/*<Print context={[props.product.prices?.lowest, data]}/>*/}
+            <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-6 pb-6">
+                <h2 className="col-span-6 text-gray-800">Wat is de samenstelling van jouw reisgezelschap?</h2>
+                <Adults input={input} className="col-span-1" onChange={onChangeAdults}/>
+                <Children input={input} className="col-span-1" onChange={onChangeChildren}/>
+                <Babies input={input} className="col-span-1" onChange={onChangeBabies}/>
+                <div className="col-span-4">
+                    {wizard.data.price ? <Calendar prices={wizard.data.price.prices} input={input} /> : null}
+                </div>
+            </div>
         </>
     )
 }

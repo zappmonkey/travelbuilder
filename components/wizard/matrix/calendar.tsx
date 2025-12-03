@@ -5,6 +5,7 @@ import {CalendarDaysIcon, ChevronRightIcon, ChevronLeftIcon} from "@heroicons/re
 import {useState} from "react";
 import Print from "@/components/ui/dev/print";
 import {Input} from "@/lib/wizard/input";
+import {PriceModel} from "@/interface/wizard/price/price";
 
 type Props = {
     label?: string
@@ -14,7 +15,7 @@ type Props = {
     className?: string
     autoComplete?: string
     ref?: any
-    prices: any
+    prices: PriceModel[]
     input: {};
 }
 
@@ -27,15 +28,15 @@ type Day = {
     basePrice: number|undefined
 }
 
-const getMonth = function getMonth(currentDate: Date, selectedDate: Date, prices): any {
+const getMonth = function getMonth(currentDate: Date, selectedDate: Date, prices: Dict<PriceModel>): any {
     const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
     const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
     const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     const today = new Date();
     const dates = [];
-    let item = {};
-    let price = {};
+    let item: Record<string, any>;
+    let price: PriceModel;
     let isoDate: string;
     let date: Date;
     for (let d = 1; d <= monthEnd.getDate(); d++) {
@@ -90,10 +91,11 @@ const getMonth = function getMonth(currentDate: Date, selectedDate: Date, prices
     };
 }
 
-const pricesToArray = function(prices)
+const pricesToArray = function(prices: PriceModel[]): Dict<PriceModel>
 {
     const priceArray = {};
     prices.forEach((price) => {
+        // @ts-ignore
         priceArray[price.date] = price;
     })
     return priceArray;
@@ -108,7 +110,7 @@ export default function Calendar(props: Props) {
     const month = getMonth(currentDate, selectDate, prices)
     return (
         <div className={props.className ? props.className : ''}>
-            <div className="bg-white min-w-[320px] w-full z-20 mt-3 p-2 rounded-lg ring-1 ring-gray-200 shadow-sm">
+            <div className="bg-white min-w-[320px] w-full z-20 p-2 rounded-lg ring-1 ring-gray-200 shadow-sm">
                 <section key={month.name} className="text-center">
                     <h2 className="text-sm font-semibold text-gray-900 flex items-center justify-between">
                         <button className="p-2 cursor-pointer" onClick={() => setCurrentDate(month.prev)}>

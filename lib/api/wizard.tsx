@@ -1,9 +1,9 @@
 'use server'
 
 import {fetcher} from '@/lib/api/fetcher';
-import {Request} from "@/interface/wizard/request"
+import {WizardRequest} from "@/interface/wizard/request"
 
-export async function wizard(request: Request): Promise<any>
+export async function wizard(request: WizardRequest): Promise<any>
 {
     return fetcher.post('wizard', request)
 }

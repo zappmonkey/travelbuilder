@@ -1,8 +1,11 @@
+'use server'
+
 import { Fragment } from 'react'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 import Print from "@/components/ui/dev/print";
 import {GenericContent} from "@/interface/content";
 import Wizard from "@/components/wizard";
+import {initInput, Input} from "@/lib/wizard/input";
 
 
 
@@ -11,7 +14,7 @@ type Props = {
     product: any
 }
 
-export default function ProductTabs(props: Props): any
+export default async function ProductTabs(props: Props)
 {
     const tabs = [
         {
@@ -20,7 +23,7 @@ export default function ProductTabs(props: Props): any
         },
         {
             name: 'Data & Prijzen',
-            children: <Wizard product={props.product} generic={props.generic}/>
+            children: <Wizard product={props.product} generic={props.generic} input={(await initInput(props.product.id, props.product.prices.lowest.date, props.product.prices.lowest.duration, ['price', 'selection'])).json()}/>
         },
         {
             name: 'Dagprogramma',
@@ -63,7 +66,7 @@ export default function ProductTabs(props: Props): any
 
                 <TabPanels as={Fragment}>
                     {tabs.map((tab) => (
-                        <TabPanel key={tab.name} className="space-y-16 pt-10 lg:pt-16">
+                        <TabPanel key={tab.name} className="space-y-16 py-6 lg:pt-10">
                             {tab.children}
                         </TabPanel>
                     ))}
