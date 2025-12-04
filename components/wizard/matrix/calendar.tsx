@@ -1,24 +1,23 @@
 'use client'
 
 import {classNames, getIsoDate, getMonthName, getTodayIsoDate, stringToDate} from "@/lib/utils/methods";
-import {CalendarDaysIcon, ChevronRightIcon, ChevronLeftIcon} from "@heroicons/react/24/outline";
+import {ChevronRightIcon, ChevronLeftIcon} from "@heroicons/react/24/outline";
 import {useState} from "react";
-import Print from "@/components/ui/dev/print";
-import {Input} from "@/lib/wizard/input";
 import {PriceModel} from "@/interface/wizard/price/price";
 
 type Props = {
     label?: string
     placeholder?: string
     value?: string
+    display_date?: string
     required?: boolean
     className?: string
     autoComplete?: string
     ref?: any
     prices: PriceModel[]
-    input: {};
+    input: any;
+    onDisplayDateAction: (date: Date) => void;
 }
-
 type Day = {
     date: string;
     isToday?: boolean;
@@ -28,7 +27,7 @@ type Day = {
     basePrice: number|undefined
 }
 
-const getMonth = function getMonth(currentDate: Date, selectedDate: Date, prices: Dict<PriceModel>): any {
+const getMonth = function getMonth(currentDate: Date, selectedDate: Date|undefined, prices: Dict<PriceModel>): any {
     const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
     const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
@@ -46,7 +45,7 @@ const getMonth = function getMonth(currentDate: Date, selectedDate: Date, prices
             date: isoDate,
             isCurrentMonth: true,
             isToday: date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate(),
-            isSelected: date.getFullYear() === selectedDate.getFullYear() && date.getMonth() === selectedDate.getMonth() && date.getDate() === selectedDate.getDate(),
+            isSelected: (selectedDate !== undefined && date.getFullYear() === selectedDate.getFullYear() && date.getMonth() === selectedDate.getMonth() && date.getDate() === selectedDate.getDate()),
             fullPrice: undefined,
             basePrice: undefined,
         }
@@ -94,30 +93,33 @@ const getMonth = function getMonth(currentDate: Date, selectedDate: Date, prices
 const pricesToArray = function(prices: PriceModel[]): Dict<PriceModel>
 {
     const priceArray = {};
-    prices.forEach((price) => {
-        // @ts-ignore
-        priceArray[price.date] = price;
-    })
+    if (prices) {
+        prices.forEach((price) => {
+            // @ts-ignore
+            priceArray[price.date] = price;
+        })
+    }
     return priceArray;
 }
 
 
 export default function Calendar(props: Props) {
     const prices = pricesToArray(props.prices);
-    const date = new Date(props.value ? props.value : getTodayIsoDate());
-    const [selectDate, setSelectedDate] = useState<Date>(date);
-    const [currentDate, setCurrentDate] = useState<Date>(date);
-    const month = getMonth(currentDate, selectDate, prices)
+    const date = (props.value ? new Date(props.value) : undefined);
+    const displayDate = stringToDate(props.input.display_date !== undefined ? props.input.display_date : (props.value ? props.value : getTodayIsoDate()));
+    const [selectDate, setSelectedDate] = useState<Date|undefined>(date);
+    // const [currentDate, setCurrentDate] = useState<Date>(displayDate);
+    const month = getMonth(displayDate, selectDate, prices)
     return (
         <div className={props.className ? props.className : ''}>
             <div className="bg-white min-w-[320px] w-full z-20 p-2 rounded-lg ring-1 ring-gray-200 shadow-sm">
                 <section key={month.name} className="text-center">
                     <h2 className="text-sm font-semibold text-gray-900 flex items-center justify-between">
-                        <button className="p-2 cursor-pointer" onClick={() => setCurrentDate(month.prev)}>
+                        <button className="p-2 cursor-pointer" onClick={() => props.onDisplayDateAction(month.prev)}>
                             <ChevronLeftIcon className="size-4" />
                         </button>
                         <div>{month.name}</div>
-                        <button className="p-2 cursor-pointer" onClick={() => setCurrentDate(month.next)}>
+                        <button className="p-2 cursor-pointer" onClick={() => props.onDisplayDateAction(month.next)}>
                             <ChevronRightIcon className="size-4" />
                         </button>
                     </h2>

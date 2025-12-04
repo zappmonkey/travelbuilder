@@ -23,7 +23,11 @@ export default async function ProductTabs(props: Props)
         },
         {
             name: 'Data & Prijzen',
-            children: <Wizard product={props.product} generic={props.generic} input={(await initInput(props.product.id, props.product.prices.lowest.date, props.product.prices.lowest.duration, ['price', 'selection'])).json()}/>
+            children: <Wizard
+                product={props.product}
+                generic={props.generic}
+                input={(await initInput(props.product.id, props.product.prices.lowest.date, props.product.prices.lowest.duration, ['price', 'selection'])).json()}
+            />
         },
         {
             name: 'Dagprogramma',

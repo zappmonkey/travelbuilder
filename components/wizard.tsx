@@ -7,6 +7,7 @@ import Adults from "@/components/wizard/occupation/adults";
 import Children from "@/components/wizard/occupation/children";
 import Babies from "@/components/wizard/occupation/babies";
 import {useState} from "react";
+import {getIsoDate} from "@/lib/utils/methods";
 
 type Props = {
     product: any
@@ -16,13 +17,18 @@ type Props = {
 
 export default function Wizard(props: Props)
 {
+    let wizardLoading = false;
     const [wizard, setWizard] = useState<any|null>(null);
     let input: InputSimple = props.input;
     if (wizard !== null) {
         input = wizard.input;
     }
     const update = async function(input: InputSimple): Promise<void> {
-        input.calls = ['price', 'selection'];
+        if (wizardLoading) {
+            return;
+        }
+        wizardLoading = true;
+        input.calls = ['price', 'selection', 'flight'];
         let url = `/api/wizard`
         await fetch(url, {
             headers: {
@@ -35,16 +41,22 @@ export default function Wizard(props: Props)
         .then((response) => response.json())
         .then(async (data) => {
             setWizard(data);
+            wizardLoading = false;
         })
         .catch((err) => {
+            wizardLoading = false;
             console.error(err)
         })
     };
 
     if (wizard === null) {
+        console.log('init wizard');
         update(input);
-        return (<></>)
+        return (<>
+            Loading prices
+        </>)
     }
+
     const updateAges = function(adults: number, children: number, babies: number): void {
         const ages = [];
         input.adults = adults;
@@ -77,6 +89,11 @@ export default function Wizard(props: Props)
         update(input);
     };
 
+    const onDisplayDateAction = function(date: Date) {
+        input.display_date = getIsoDate(date);
+        update(input);
+    };
+
     return (
         <>
             <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-6 pb-6">
@@ -85,7 +102,7 @@ export default function Wizard(props: Props)
                 <Children input={input} className="col-span-1" onChange={onChangeChildren}/>
                 <Babies input={input} className="col-span-1" onChange={onChangeBabies}/>
                 <div className="col-span-4">
-                    {wizard.data.price ? <Calendar prices={wizard.data.price.prices} input={input} /> : null}
+                    {wizard.data.price ? <Calendar prices={wizard.data.price.prices} input={input} onDisplayDateAction={onDisplayDateAction}/> : null}
                 </div>
             </div>
         </>

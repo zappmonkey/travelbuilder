@@ -166,8 +166,9 @@ export async function initInput(id: number, display_date: string, display_durati
     await input.read()
     let date = input.date;
     let duration = input.duration;
+    console.log('date', date, display_date)
     if (date === undefined) {
-        input.date = display_date;
+        input.display_date = display_date;
     }
     if (duration === undefined) {
         input.duration = display_duration;
