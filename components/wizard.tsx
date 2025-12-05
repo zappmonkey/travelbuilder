@@ -7,7 +7,9 @@ import Adults from "@/components/wizard/occupation/adults";
 import Children from "@/components/wizard/occupation/children";
 import Babies from "@/components/wizard/occupation/babies";
 import {useState} from "react";
-import {getIsoDate} from "@/lib/utils/methods";
+import {empty, getIsoDate} from "@/lib/utils/methods";
+import Months from "@/components/wizard/matrix/months";
+import Flights from "@/components/wizard/flights/flights";
 
 type Props = {
     product: any
@@ -28,7 +30,11 @@ export default function Wizard(props: Props)
             return;
         }
         wizardLoading = true;
-        input.calls = ['price', 'selection', 'flight'];
+        input.calls = ['price', 'selection', 'date_durations'];
+        if (!empty(input.date)) {
+            input.calls.push('flight');
+            input.calls.push('receipt');
+        }
         let url = `/api/wizard`
         await fetch(url, {
             headers: {
@@ -94,17 +100,20 @@ export default function Wizard(props: Props)
         update(input);
     };
 
+    const onDateAction = function(date: Date) {
+        input.date = getIsoDate(date);
+        update(input);
+    };
+
     return (
-        <>
-            <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-6 pb-6">
-                <h2 className="col-span-6 text-gray-800">Wat is de samenstelling van jouw reisgezelschap?</h2>
-                <Adults input={input} className="col-span-1" onChange={onChangeAdults}/>
-                <Children input={input} className="col-span-1" onChange={onChangeChildren}/>
-                <Babies input={input} className="col-span-1" onChange={onChangeBabies}/>
-                <div className="col-span-4">
-                    {wizard.data.price ? <Calendar prices={wizard.data.price.prices} input={input} onDisplayDateAction={onDisplayDateAction}/> : null}
-                </div>
-            </div>
-        </>
+        <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-6 pb-6">
+            <h2 className="col-span-6 text-gray-800">Wat is de samenstelling van jouw reisgezelschap?</h2>
+            <Adults input={input} className="col-span-1" onChange={onChangeAdults}/>
+            <Children input={input} className="col-span-1" onChange={onChangeChildren}/>
+            <Babies input={input} className="col-span-1" onChange={onChangeBabies}/>
+            {wizard.data.date_durations ? <Months input={input} date_durations={wizard.data.date_durations.dates} className="col-span-1" onChange={onDisplayDateAction}/> : null}
+            {wizard.data.price ? <Calendar className="col-span-4" prices={wizard.data.price.prices} input={input} onDisplayDateAction={onDisplayDateAction} onDateAction={onDateAction}/> : null}
+            {wizard.data.flight ? <Flights input={input} flights={wizard.data.flight}/> : null}
+        </div>
     )
 }

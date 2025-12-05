@@ -36,7 +36,7 @@ export async function POST(
         },
         "date": date,
         "display_date": input.display_date,
-        "dates_around": 30,
+        "dates_around": 20,
         "duration": input.duration,
         "durations_around": undefined,
         "calls": calls

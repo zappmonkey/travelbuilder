@@ -72,7 +72,7 @@ export function dateToHumanReadable(date: string|Date): string
     if (!(date instanceof Date)) {
         date = new Date(date);
     }
-    return date.toLocaleDateString("en-US", options);
+    return date.toLocaleDateString("nl-NL", options);
 }
 
 export function dateTimeToHumanReadable(date: string|Date): string
@@ -82,7 +82,7 @@ export function dateTimeToHumanReadable(date: string|Date): string
     if (!(date instanceof Date)) {
         date = new Date(date);
     }
-    return date.toLocaleDateString("en-US", options);
+    return date.toLocaleDateString("nl-NL", options);
 }
 
 export function getMonthName(date: string|Date): string
@@ -92,7 +92,7 @@ export function getMonthName(date: string|Date): string
     if (!(date instanceof Date)) {
         date = new Date(date);
     }
-    return date.toLocaleDateString("en-US", options);
+    return date.toLocaleDateString("nl-NL", options);
 }
 
 export function stringToDate(date: string): Date

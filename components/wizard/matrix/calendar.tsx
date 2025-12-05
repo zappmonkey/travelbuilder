@@ -17,6 +17,7 @@ type Props = {
     prices: PriceModel[]
     input: any;
     onDisplayDateAction: (date: Date) => void;
+    onDateAction: (date: Date) => void;
 }
 type Day = {
     date: string;
@@ -30,8 +31,8 @@ type Day = {
 const getMonth = function getMonth(currentDate: Date, selectedDate: Date|undefined, prices: Dict<PriceModel>): any {
     const monthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const monthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-    const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-    const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 15);
+    const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 15);
     const today = new Date();
     const dates = [];
     let item: Record<string, any>;
@@ -118,7 +119,7 @@ export default function Calendar(props: Props) {
                         <button className="p-2 cursor-pointer" onClick={() => props.onDisplayDateAction(month.prev)}>
                             <ChevronLeftIcon className="size-4" />
                         </button>
-                        <div>{month.name}</div>
+                        <div className="capitalize">{month.name}</div>
                         <button className="p-2 cursor-pointer" onClick={() => props.onDisplayDateAction(month.next)}>
                             <ChevronRightIcon className="size-4" />
                         </button>
@@ -137,7 +138,7 @@ export default function Calendar(props: Props) {
                             <button
                                 key={day.date}
                                 type="button"
-                                onClick={() => {setSelectedDate(stringToDate(day.date))}}
+                                onClick={() => {const date = stringToDate(day.date); setSelectedDate(date); props.onDateAction(date)}}
                                 className={classNames(
                                     day.isToday && !day.isSelected ? 'bg-white font-semibold text-nrv-orange'
                                         : (day.isCurrentMonth ? 'bg-white text-gray-900' : 'bg-gray-50 text-gray-400'),
@@ -157,7 +158,7 @@ export default function Calendar(props: Props) {
                                 >
                                     {day.basePrice ? <div>
                                         <div className="py-1">{day.date.split('-').pop()?.replace(/^0/, '')}</div>
-                                        <div className="py-1 border-t-1 border-t-gray-600">{day.basePrice}</div>
+                                        <div className="py-1 border-t-1 border-t-gray-600">{Math.round(day.basePrice)}</div>
                                     </div> : day.date.split('-').pop()?.replace(/^0/, '')}
                                 </time>
                             </button>

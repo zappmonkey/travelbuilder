@@ -47,7 +47,7 @@ export default function Select(props: Props) {
                 {props.label ? <Label className="block text-sm/6 font-medium text-gray-600 mb-2">{ props.label } { props.required ? <span className={"text-red-700"}>*</span> : <></>}</Label> : ''}
                 <div className="relative">
                     <ListboxButton className="grid w-full cursor-default grid-cols-1 border-1 border-gray-400 rounded-sm bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-amber-800 sm:text-sm/6">
-                        <span className="col-start-1 row-start-1 truncate pr-6">{getLabel(selected)}</span>
+                        <span className="col-start-1 row-start-1 truncate pr-6 capitalize">{getLabel(selected)}</span>
                         <ChevronDownIcon
                             aria-hidden="true"
                             className="col-start-1 row-start-1 size-6 self-center justify-self-end text-gray-500 sm:size-5"
@@ -71,7 +71,7 @@ export default function Select(props: Props) {
                                 className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-gray-500 data-focus:text-white data-focus:outline-hidden"
                             >
 
-                                <span className="block truncate font-normal group-data-selected:font-semibold">{option.icon ? option.icon : null}{option.label}</span>
+                                <span className="block truncate font-normal group-data-selected:font-semibold capitalize">{option.icon ? option.icon : null}{option.label}</span>
                                 <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-nrv-orange group-not-data-selected:hidden group-data-focus:text-white">
                                 <CheckIcon aria-hidden="true" className="size-5" />
                             </span>
