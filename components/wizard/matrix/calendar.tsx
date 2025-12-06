@@ -1,9 +1,10 @@
 'use client'
 
-import {classNames, getIsoDate, getMonthName, getTodayIsoDate, stringToDate} from "@/lib/utils/methods";
+import {classNames, empty, getIsoDate, getMonthName, getTodayIsoDate, stringToDate} from "@/lib/utils/methods";
 import {ChevronRightIcon, ChevronLeftIcon} from "@heroicons/react/24/outline";
 import {useState} from "react";
 import {PriceModel} from "@/interface/wizard/price/price";
+import Print from "@/components/ui/dev/print";
 
 type Props = {
     label?: string
@@ -106,10 +107,9 @@ const pricesToArray = function(prices: PriceModel[]): Dict<PriceModel>
 
 export default function Calendar(props: Props) {
     const prices = pricesToArray(props.prices);
-    const date = (props.value ? new Date(props.value) : undefined);
-    const displayDate = stringToDate(props.input.display_date !== undefined ? props.input.display_date : (props.value ? props.value : getTodayIsoDate()));
+    const date = (!empty(props.input.date) ? new Date(props.input.date) : undefined);
+    const displayDate = stringToDate(props.input.display_date !== undefined ? props.input.display_date : (!empty(props.input.date) ? props.input.date : getTodayIsoDate()));
     const [selectDate, setSelectedDate] = useState<Date|undefined>(date);
-    // const [currentDate, setCurrentDate] = useState<Date>(displayDate);
     const month = getMonth(displayDate, selectDate, prices)
     return (
         <div className={props.className ? props.className : ''}>
@@ -125,13 +125,13 @@ export default function Calendar(props: Props) {
                         </button>
                     </h2>
                     <div className="mt-2 grid grid-cols-7 text-xs/6 text-gray-500">
-                        <div>M</div>
-                        <div>T</div>
-                        <div>W</div>
-                        <div>T</div>
-                        <div>F</div>
-                        <div>S</div>
-                        <div>S</div>
+                        <div>Ma</div>
+                        <div>Di</div>
+                        <div>Wo</div>
+                        <div>Do</div>
+                        <div>Vr</div>
+                        <div>Za</div>
+                        <div>Zo</div>
                     </div>
                     <div className="isolate mt-2 grid grid-cols-7 gap-px rounded-md bg-gray-200 text-sm ring-1 ring-gray-200">
                         {month.days.map((day: Day, dayIdx: number) => (
@@ -141,24 +141,24 @@ export default function Calendar(props: Props) {
                                 onClick={() => {const date = stringToDate(day.date); setSelectedDate(date); props.onDateAction(date)}}
                                 className={classNames(
                                     day.isToday && !day.isSelected ? 'bg-white font-semibold text-nrv-orange'
-                                        : (day.isCurrentMonth ? 'bg-white text-gray-900' : 'bg-gray-50 text-gray-400'),
+                                        : (day.isCurrentMonth ? 'bg-white text-gray-800 hover:bg-gray-100 cursor-pointer' : 'bg-gray-50 text-gray-400'),
                                     dayIdx === 0 ? 'rounded-tl-md' : '',
                                     dayIdx === 6 ? 'rounded-tr-md' : '',
                                     dayIdx === month.days.length - 7 ? 'rounded-bl-md' : '',
                                     dayIdx === month.days.length - 1 ? 'rounded-br-md' : '',
-                                    ' hover:bg-gray-100 focus:z-10',
+                                    'focus:z-10 p-1',
                                 )}
                             >
                                 <time
                                     dateTime={day.date}
                                     className={classNames(
-                                        day.isSelected ? 'bg-nrv-orange font-semibold text-white' : '',
+                                        day.isSelected ? 'bg-nrv-orange font-semibold text-nrv-orange' : (day.isCurrentMonth ? 'bg-white' : ''),
                                         'mx-auto flex h-14 items-center justify-center',
                                     )}
                                 >
-                                    {day.basePrice ? <div>
+                                    {day.basePrice ? <div className="bg-white w-full mx-1 my-2">
                                         <div className="py-1">{day.date.split('-').pop()?.replace(/^0/, '')}</div>
-                                        <div className="py-1 border-t-1 border-t-gray-600">{Math.round(day.basePrice)}</div>
+                                        <div className={classNames(day.isSelected ? "border-t-nrv-orange" : "border-t-gray-600", "py-1 mx-2 border-t-1")}>{Math.round(day.basePrice)}</div>
                                     </div> : day.date.split('-').pop()?.replace(/^0/, '')}
                                 </time>
                             </button>

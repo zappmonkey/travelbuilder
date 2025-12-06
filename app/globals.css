@@ -10,6 +10,7 @@
     --color-foreground: var(--foreground);
     --font-sans: var(--font-ubuntu-sans);
     --font-mono: var(--font-ubuntu-mono);
+    --color-nrv-light-orange: #fef5f0;
     --color-nrv-orange: #fb5314;
     --color-nrv-blue: #33b4f0;
 }

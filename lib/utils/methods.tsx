@@ -1,5 +1,7 @@
 import DateObject from "react-date-object";
 
+let locale = 'nl-NL';
+
 export function classNames(...classes: string[])
 {
     return classes.filter(Boolean).join(' ')
@@ -31,7 +33,7 @@ export function randomGUID(length: number)
 
 export function empty(value: any): boolean
 {
-    if (value === '' || value === null || value === undefined) {
+    if (value === '' || value === null || value === undefined || value === false || value === 'false' || (Array.isArray(value) && value.length === 0)) {
         return true;
     }
     return false;
@@ -72,7 +74,7 @@ export function dateToHumanReadable(date: string|Date): string
     if (!(date instanceof Date)) {
         date = new Date(date);
     }
-    return date.toLocaleDateString("nl-NL", options);
+    return date.toLocaleDateString(locale, options);
 }
 
 export function dateTimeToHumanReadable(date: string|Date): string
@@ -82,7 +84,12 @@ export function dateTimeToHumanReadable(date: string|Date): string
     if (!(date instanceof Date)) {
         date = new Date(date);
     }
-    return date.toLocaleDateString("nl-NL", options);
+    return date.toLocaleDateString(locale, options);
+}
+
+export function getLocalCurrency(value: number): string
+{
+    return new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" }).format(value);
 }
 
 export function getMonthName(date: string|Date): string
@@ -92,7 +99,7 @@ export function getMonthName(date: string|Date): string
     if (!(date instanceof Date)) {
         date = new Date(date);
     }
-    return date.toLocaleDateString("nl-NL", options);
+    return date.toLocaleDateString(locale, options);
 }
 
 export function stringToDate(date: string): Date
