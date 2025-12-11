@@ -1,9 +1,9 @@
-import {InputSimple} from "@/lib/wizard/input";
+import {SimpleInput} from "@/lib/wizard/input";
 import Print from "@/components/ui/dev/print";
-import {dateToHumanReadable, empty, getLocalCurrency} from "@/lib/utils/methods";
+import {dateTimeToHumanReadable, dateToHumanReadable, empty, getLocalCurrency} from "@/lib/utils/methods";
 
 type Props = {
-    input: InputSimple,
+    input: SimpleInput,
     booking: any,
     className?: string,
 }
@@ -23,6 +23,7 @@ export default function Receipt(props: Props)
             }
         }
     }
+    let transportShown: string[] = [];
     return (
         <section className="receipt text-sm text-gray-800 border-1 border-gray-200">
             <div className="flex items-center justify-between bg-nrv-light-orange border-b-1 border-dashed border-nrv-orange p-4 font-medium">
@@ -62,7 +63,32 @@ export default function Receipt(props: Props)
                     <div className="col-span-8 capitalize">{props.input.babies}</div>
                 </> : null}
             </div>
-
+            {!empty(props.booking.order.transportation) ?
+                <div className="grid grid-cols-10 gap-1 p-4 flex items-center">
+                <h3 className="text-nrv-orange font-medium col-span-10">Vervoer</h3>
+                {props.booking.order.transportation.map((line: any, index: number) => (
+                    line.type == 'AUTOHUUR' ? <div key={index} className="grid grid-cols-10 gap-1 col-span-10 items-center justify-center text-xs">
+                        {!transportShown.includes(line.type) && transportShown.push(line.type) ? <h4 className="col-span-10 font-medium mt-2 text-xs">Huurauto</h4> : null}
+                        <div className="col-span-2">
+                            Ophalen
+                        </div>
+                        <div className="col-span-4 capitalize">{line.start.name}</div>
+                        <div className="col-span-4 capitalize text-right italic text-gray-600">{dateToHumanReadable(line.start.date)}</div>
+                        <div className="col-span-2">
+                            Inleveren
+                        </div>
+                        <div className="col-span-4 capitalize">{line.end.name}</div>
+                        <div className="col-span-4 capitalize text-right italic text-gray-600">{dateToHumanReadable(line.end.date)}</div>
+                    </div>: <div key={index} className="grid grid-cols-10 gap-1 col-span-10 items-center justify-center text-xs">
+                        {!transportShown.includes(line.type) && transportShown.push(line.type) ? <h4 className="col-span-10 mt-2 font-medium text-xs">Vluchten</h4> : null}
+                        <div className="col-span-8 capitalize">{line.start.name} - {line.end.name}</div>
+                        <div className="col-span-2">
+                            {line.number}
+                        </div>
+                        <div className="col-span-10 capitalize italic text-gray-600">{dateTimeToHumanReadable(line.start.date)} - {dateTimeToHumanReadable(line.end.date)}</div>
+                    </div>
+                ))}
+            </div>: null}
             <h3 className="text-nrv-orange font-medium p-4 -mb-6">Overzicht</h3>
             {props.booking.order && props.booking.order.elements ? props.booking.order.elements.map((element: any) => (
                 <div key={element.id} className="grid grid-cols-10 mt-4 px-4">
@@ -73,8 +99,8 @@ export default function Receipt(props: Props)
                         {empty(element.is_base) && !empty(element.total) ? getLocalCurrency(element.total) : null}
                         {!empty(element.is_base) && !empty(element.is_type) ? getLocalCurrency(props.booking.order.base.price_extra) : null}
                     </div>
-                    {!empty(element.items) ? element.items.map((item: any) => (
-                        <div key={item.id} className="col-span-10 text-xs grid grid-cols-10">
+                    {!empty(element.items) ? element.items.map((item: any, index: number) => (
+                        <div key={item.property_id + index.toString()} className="col-span-10 text-xs grid grid-cols-10 text-gray-600">
                             <div className="col-span-1">
                                 {item.amount} x
                             </div>
@@ -96,7 +122,6 @@ export default function Receipt(props: Props)
                     {getLocalCurrency(props.booking.order.total)}
                 </div>
             </div>
-            <Print context={props.booking}/>
         </section>
     )
 }

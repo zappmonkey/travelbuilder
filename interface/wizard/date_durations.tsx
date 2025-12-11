@@ -1,4 +1,4 @@
-interface DateDurations {
+export interface DateDurations {
     date: string;
     durations: number[];
 }

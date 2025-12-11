@@ -1,12 +1,14 @@
 import Select, {Option} from "@/components/form/element/select";
-import {InputSimple} from "@/lib/wizard/input";
+import {SimpleInput} from "@/lib/wizard/input";
 import {getMonthName, stringToDate} from "@/lib/utils/methods";
+import {DateDurations} from "@/interface/wizard/date_durations";
+import WizardHandler from "@/lib/wizard/handler";
 
 type Props = {
-    input: InputSimple,
+    input: SimpleInput,
     date_durations: DateDurations[],
     className?: string,
-    onChange?: (date: Date) => void,
+    wizardHandler: WizardHandler
 }
 
 export default function Months(props: Props) {
@@ -34,6 +36,6 @@ export default function Months(props: Props) {
     const displayDate = stringToDate(props.input.display_date.toString())
     const value  = displayDate.getFullYear() + "-" + ("0" + (displayDate.getMonth() + 1).toString()).slice(-2) + "-15";
     return (
-        <Select key={value} name="month" options={months} value={value} label={'Maand'} className={(props.className ? props.className : "")} onChange={(value: string) => {if (props.onChange !== undefined) {props.onChange(stringToDate(value))}}}/>
+        <Select key={value} name="month" options={months} value={value} label={'Maand'} className={(props.className ? props.className : "")} onChange={(value: string) => props.wizardHandler.onDisplayDateAction(stringToDate(value))} />
     )
 }

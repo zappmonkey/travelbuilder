@@ -1,10 +1,11 @@
 import Select, {Option} from "@/components/form/element/select";
-import {InputSimple} from "@/lib/wizard/input";
+import {SimpleInput} from "@/lib/wizard/input";
+import WizardHandler from "@/lib/wizard/handler";
 
 type Props = {
-    input: InputSimple,
+    input: SimpleInput,
     className?: string,
-    onChange?: (value: string) => void,
+    wizardHandler: WizardHandler
 }
 
 export default function Babies(props: Props)
@@ -25,6 +26,6 @@ export default function Babies(props: Props)
     })
 
     return (
-        <Select name="babies" options={babies} value={props.input.babies.toString()} label={'Babies'} emptyLabel="Geen babies" className={(props.className ? props.className : "")} onChange={props.onChange}/>
+        <Select name="babies" options={babies} value={props.input.babies.toString()} label={'Babies'} emptyLabel="Geen babies" className={(props.className ? props.className : "")} onChange={(value: string) => props.wizardHandler.onChangeBabies(value)}/>
     )
 }

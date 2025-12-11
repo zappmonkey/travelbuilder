@@ -1,5 +1,19 @@
 import {defaultSession, getSession, storeSession} from "@/lib/utils/session";
 
+export type SimpleInput = {
+    type: string
+    id: number
+    date: string
+    display_date: string
+    duration: string
+    ages: number[]
+    adults: number
+    children: number
+    babies: number
+    step: number
+    calls: string[]
+}
+
 export class InputSimple {
     type: string = "";
     id: number = 0;
@@ -13,7 +27,7 @@ export class InputSimple {
     step: number = 1;
     calls: string[] = [];
 
-    json(): {}
+    json(): SimpleInput
     {
         return JSON.parse(JSON.stringify(this));
     }
@@ -141,7 +155,7 @@ export class Input {
         this._step = value;
     }
 
-    async simple(): Promise<InputSimple>
+    simple(): SimpleInput
     {
         let input = JSON.parse(JSON.stringify(this))
         let simple: InputSimple = new InputSimple();
@@ -156,29 +170,21 @@ export class Input {
         simple.children = this.children;
         simple.babies = this.babies
         simple.step  = this.step;
-        return simple;
+        return simple.json();
     }
 }
 
-export async function initInput(id: number, display_date: string, display_duration: number, calls: string[]): Promise<InputSimple>
+export async function initInput(id: number, display_date: string, display_duration: number): Promise<SimpleInput>
 {
     const input = new Input(Number(id));
     await input.read()
     let date = input.date;
     let duration = input.duration;
-    console.log('date', date, display_date)
     if (date === undefined) {
         input.display_date = display_date;
     }
     if (duration === undefined) {
         input.duration = display_duration;
-    }
-    // let calls = [
-    //     "price",
-    //     "selection",
-    // ];
-    if (input.date !== undefined) {
-        calls.push("book_check");
     }
     await input.write();
     return input.simple();

@@ -43,7 +43,7 @@ export async function POST(
     };
     let data = await wizard(wizardRequest);
     return new Response(JSON.stringify({
-        "input": (await input.simple()).json(),
+        "input": input.simple(),
         "data": data
     }),{
         status: 200,

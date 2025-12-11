@@ -1,10 +1,8 @@
-'use client'
-
 import {classNames, empty, getIsoDate, getMonthName, getTodayIsoDate, stringToDate} from "@/lib/utils/methods";
 import {ChevronRightIcon, ChevronLeftIcon} from "@heroicons/react/24/outline";
 import {useState} from "react";
 import {PriceModel} from "@/interface/wizard/price/price";
-import Print from "@/components/ui/dev/print";
+import WizardHandler from "@/lib/wizard/handler";
 
 type Props = {
     label?: string
@@ -17,8 +15,7 @@ type Props = {
     ref?: any
     prices: PriceModel[]
     input: any;
-    onDisplayDateAction: (date: Date) => void;
-    onDateAction: (date: Date) => void;
+    wizardHandler: WizardHandler
 }
 type Day = {
     date: string;
@@ -116,11 +113,11 @@ export default function Calendar(props: Props) {
             <div className="bg-white min-w-[320px] w-full z-20 p-2 rounded-lg ring-1 ring-gray-200 shadow-sm">
                 <section key={month.name} className="text-center">
                     <h2 className="text-sm font-semibold text-gray-900 flex items-center justify-between">
-                        <button className="p-2 cursor-pointer" onClick={() => props.onDisplayDateAction(month.prev)}>
+                        <button className="p-2 cursor-pointer" onClick={() => props.wizardHandler.onDisplayDateAction(month.prev)}>
                             <ChevronLeftIcon className="size-4" />
                         </button>
                         <div className="capitalize">{month.name}</div>
-                        <button className="p-2 cursor-pointer" onClick={() => props.onDisplayDateAction(month.next)}>
+                        <button className="p-2 cursor-pointer" onClick={() => props.wizardHandler.onDisplayDateAction(month.next)}>
                             <ChevronRightIcon className="size-4" />
                         </button>
                     </h2>
@@ -138,7 +135,7 @@ export default function Calendar(props: Props) {
                             <button
                                 key={day.date}
                                 type="button"
-                                onClick={() => {const date = stringToDate(day.date); setSelectedDate(date); props.onDateAction(date)}}
+                                onClick={() => {const date = stringToDate(day.date); setSelectedDate(date); props.wizardHandler.onDateAction(date)}}
                                 className={classNames(
                                     day.isToday && !day.isSelected ? 'bg-white font-semibold text-nrv-orange'
                                         : (day.isCurrentMonth ? 'bg-white text-gray-800 hover:bg-gray-100 cursor-pointer' : 'bg-gray-50 text-gray-400'),

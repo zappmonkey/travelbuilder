@@ -6,7 +6,7 @@ import Print from "@/components/ui/dev/print";
 import {GenericContent} from "@/interface/content";
 import Wizard from "@/components/wizard";
 import {initInput, Input} from "@/lib/wizard/input";
-
+import WizardNew from "@/components/wizard_new";
 
 
 type Props = {
@@ -23,10 +23,10 @@ export default async function ProductTabs(props: Props)
         },
         {
             name: 'Data & Prijzen',
-            children: <Wizard
+            children: <WizardNew
                 product={props.product}
                 generic={props.generic}
-                input={(await initInput(props.product.id, props.product.prices.lowest.date, props.product.prices.lowest.duration, ['price', 'selection'])).json()}
+                input={(await initInput(props.product.id, props.product.prices.lowest.date, props.product.prices.lowest.duration))}
             />
         },
         {

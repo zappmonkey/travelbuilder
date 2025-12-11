@@ -1,5 +1,5 @@
 export const api_config = {
     endpoint: "http://nrv-test.1tisdevelopment.nl:8000/",
-    key: "mzOGnPTfnzevfJaWEEb1WMYMQ8oQ69FN",
-    secret: "PJDqtnvDTXfFXU8WtCMXJ7EuwYuuglOZGIw6F5n54BAEeVQtf9Mrl4ZiPZjSHpqC",
+    key: "pB5E6rkzyx4vTNXGaq3WtcYKsDn9eRdV",
+    secret: "QCkKVLplAdFFyLJIkUFcMWsyBnOZ3OEv2JIceWa5oHzOoMDeCXzeMeupHsUUC4DI",
 };
