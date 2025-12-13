@@ -10,8 +10,9 @@ import Receipt from "@/components/wizard/receipt/receipt";
 import React from "react";
 import WizardHandler from "@/lib/wizard/handler";
 import Print from "@/components/ui/dev/print";
+import Optional from "@/components/wizard/options/optional";
 
-export default class Step1 implements Step {
+export default class Step2 implements Step {
     #handler: WizardHandler;
 
     constructor(handler: WizardHandler) {
@@ -19,38 +20,30 @@ export default class Step1 implements Step {
     }
 
     id(): number {
-        return 1;
+        return 2;
     }
 
     label(): string {
-        return "Wie en Wanneer?"
+        return "Extra's"
     }
 
     render(input: SimpleInput, data: any): React.ReactNode {
         return (
             <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-6 pb-6 ">
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-5 col-span-4 content-start">
-                    <h2 className="-mb-3 col-span-4 text-gray-600 text-md font-medium">Wie gaan er allemaal mee op reis?</h2>
-                    <Adults input={input} className="col-span-1" wizardHandler={this.#handler}/>
-                    <Children input={input} className="col-span-1" wizardHandler={this.#handler}/>
-                    <Babies input={input} className="col-span-1" wizardHandler={this.#handler}/>
-                    <h2 className="-mb-3 mt-1 col-span-4 text-gray-800 text-md font-medium">Wanneer willen jullie vertrekken?</h2>
-                    {data.hasOwnProperty('date_durations') ? <Months input={input} date_durations={data.date_durations.dates} className="col-span-1" wizardHandler={this.#handler}/> : null}
-                    {data.hasOwnProperty('price') ? <Calendar className="col-span-4" prices={data.price.prices} input={input} wizardHandler={this.#handler}/> : null}
+                    {data.hasOwnProperty('book_check') && data.book_check.components ?
+                        <Optional components={data.book_check.components} categories={['GR_VERL_COMBI', 'GR_VERL_EINDHOT_KEUZE', 'GR_VERL_EINDHOT']} input={input} handler={this.#handler} className="col-span-4"/>
+                    : null}
                 </div>
                 <div className="col-span-2">
-                    {data.hasOwnProperty('order') && data.order.order ? <Receipt input={input} booking={data.order} handler={this.#handler}/> : null}
+                    {data.hasOwnProperty('book_check') && data.book_check.order ? <Receipt input={input} booking={data.book_check} handler={this.#handler}/> : null}
                 </div>
             </div>
         )
     }
 
     calls(input: SimpleInput): string[] {
-        const calls = ['price', 'date_durations'];
-        if (!empty(input.date)) {
-            calls.push('order');
-        }
-        return calls;
+        return ['book_check'];
     }
 
     setWizardHandler(handler: WizardHandler): void {

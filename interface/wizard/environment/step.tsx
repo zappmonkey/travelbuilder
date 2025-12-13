@@ -5,6 +5,8 @@ import WizardHandler from "@/lib/wizard/handler";
 export interface StepSimple {
     id: number;
     label: string;
+    active: boolean;
+    completed: boolean;
 }
 
 export interface Step {

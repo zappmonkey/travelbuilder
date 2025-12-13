@@ -1,5 +1,5 @@
 import {SimpleInput} from "@/lib/wizard/input";
-import {empty, getIsoDate} from "@/lib/utils/methods";
+import {getIsoDate} from "@/lib/utils/methods";
 import {Step, StepSimple} from "@/interface/wizard/environment/step";
 import React from "react";
 
@@ -32,7 +32,6 @@ export default class WizardHandler {
         }
         this.#wizardLoading = true;
         input.calls = this.step().calls(input);
-
         let url = `/api/wizard`
         await fetch(url, {
             headers: {
@@ -52,6 +51,7 @@ export default class WizardHandler {
                 this.#input = data.input;
             }
             if (this.#onUpdate !== undefined) {
+
                 this.#onUpdate(this.#data);
             }
             this.#wizardLoading = false;
@@ -80,6 +80,23 @@ export default class WizardHandler {
         return this.step().render(this.#input, this.#data);
     }
 
+    setStep(step: number): void {
+        if (this.#steps.hasOwnProperty(step.toString())) {
+            this.#input.step = step;
+        }
+        this.update();
+    }
+
+    previousStep(): void {
+        this.setStep(this.input.step - 1);
+        this.update();
+    }
+
+    nextStep(): void {
+        this.setStep(this.input.step + 1);
+        this.update();
+    }
+
     addStep(step: Step): void {
         const id = step.id().toString();
         this.#steps[id] = step;
@@ -95,12 +112,16 @@ export default class WizardHandler {
 
     steps(): StepSimple[]
     {
+        const activeStep = this.step();
         const steps: StepSimple[] = [];
-        // @ts-ignore
-        for (const step of this.#steps) {
+        let step: Step;
+        for (const stepId in this.#steps) {
+            step = this.#steps[stepId];
             steps.push({
                 id: step.id(),
                 label: step.label(),
+                active: step.id() == activeStep.id(),
+                completed: step.id() < activeStep.id()
             });
         }
         return steps;
@@ -134,7 +155,6 @@ export default class WizardHandler {
     };
 
     onChangeAdults(value: string) {
-        console.log(value, this);
         this.updateAges(Number(value), this.input.children, this.input.babies);
         this.update();
     };

@@ -6,13 +6,14 @@ import {empty} from "@/lib/utils/methods";
 export async function POST(
     request: Request
 ) {
-    let json = await request.json()
+    let json = await request.json();
     const input = new Input(Number(json.id));
     await input.read()
     input.ages = json.ages;
     input.duration = json.duration;
     input.date = json.date;
     input.display_date = json.display_date;
+    input.step = json.step;
 
     let calls = json.calls;
     // if (input.date !== undefined) {

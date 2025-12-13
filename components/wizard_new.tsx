@@ -2,9 +2,15 @@
 
 import {GenericContent} from "@/interface/content";
 import WizardHandler from "@/lib/wizard/handler";
-import Step1 from "@/components/wizard/steps/step_1";
+
 import {SimpleInput} from "@/lib/wizard/input";
-import {useState} from "react";
+import React, {useState} from "react";
+import Step1 from "@/components/wizard/steps/step_1";
+import Step2 from "@/components/wizard/steps/step_2";
+import Step3 from "@/components/wizard/steps/step_3";
+import Step4 from "@/components/wizard/steps/step_4";
+import Step5 from "@/components/wizard/steps/step_5";
+import Steps from "@/components/wizard/steps/steps";
 
 type Props = {
     product: any
@@ -18,9 +24,13 @@ export default function WizardNew(props: Props)
 {
     const [data, setData] = useState<any|null>(null);
 
-    if (!data) {
+    if ((!data && wizardHandler === undefined) || wizardHandler === undefined) {
         wizardHandler = new WizardHandler(props.input);
         wizardHandler.addStep(new Step1(wizardHandler));
+        wizardHandler.addStep(new Step2(wizardHandler));
+        wizardHandler.addStep(new Step3(wizardHandler));
+        wizardHandler.addStep(new Step4(wizardHandler));
+        wizardHandler.addStep(new Step5(wizardHandler));
         wizardHandler.onUpdate((data: any) => {
             setData(data);
         })
@@ -28,11 +38,13 @@ export default function WizardNew(props: Props)
             console.error(error);
         })
         wizardHandler.init()
-        console.log('init')
     }
     return (
         <>
-            {data ? wizardHandler.render() : null}
+            {data ? <>
+                <Steps handler={wizardHandler} />
+                {wizardHandler.render()}
+            </>: null}
         </>
     )
 }
