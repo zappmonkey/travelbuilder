@@ -28,6 +28,7 @@ export default function Selections(props: Props)
         }
         return options;
     }
+
     const getMinMax = (choice: any): MinMax => {
         if (choice.items.length < 1) {
             return {
@@ -41,22 +42,26 @@ export default function Selections(props: Props)
             max: firstItem.max_occupation,
         }
     }
+
     const getElementId = (selection: any): number => {
         return selection.element_ids.filter((x: any) => typeof x !== undefined).shift();
     }
+
     const addChoiceByName = (name: string, choice: any): string|null => {
         // @ts-ignore
         choicesByName[name] = choice;
         return null;
     }
+
     const choiceByName = (name: string): any => {
         // @ts-ignore
         return choicesByName.hasOwnProperty(name) ? choicesByName[name] : null;
     }
+
     const checkOccupation = (group_id: number, selection_id: number, currentName: string, currentValue: string) => {
         let minAssigned = 0;
         let maxAssigned = 0;
-        const info = document.querySelector('.selection_' + group_id + '_' + selection_id + ' .info');
+        const warning = document.querySelector('.selection_' + group_id + '_' + selection_id + ' .warning');
         document.querySelectorAll('.selection_' + group_id + '_' + selection_id + ' input, .selection_' + group_id + '_' + selection_id + ' select').forEach((el: any) => {
             const name = el.name;
             let value = el.value;
@@ -70,31 +75,34 @@ export default function Selections(props: Props)
             const minMax = getMinMax(choice);
             minAssigned += (minMax.min * Number(value));
             maxAssigned += (minMax.max * Number(value));
-        })
-        if (info !== null) {
+        });
+        if (warning !== null) {
             if (minAssigned <= totalParticipants && totalParticipants <= maxAssigned) {
-                info.textContent = '';
+                warning.textContent = '';
             } else {
-                info.textContent = 'Er zijn ' + totalParticipants + ' reizigers en er zijn ' + maxAssigned + ' toegedeeld';
+                warning.textContent = 'Er zijn ' + totalParticipants + ' reizigers en er zijn ' + maxAssigned + ' toegedeeld';
             }
         }
     }
+
     const baseName = "selection_" + props.group_id + "_" + getElementId(props.selection) + "_" + props.selection.id + "_";
     if (!props.selection || props.selection.choices.length == 0) {
         return null
     }
+
     let amountChoice: boolean = false;
     if (props.selection.selection_method_name === 'Toedeling minimaal aantal items' || props.selection.selection_method_name === 'Toedeling keuze') {
         amountChoice = true;
     }
+
     return (
         <div className={classNames(props.className ? props.className : "", "w-full")}>
             <h4 className="text-sm/6 font-medium text-gray-600 w-full">{props.selection.label}</h4>
             {amountChoice ?
-                <div className={"w-full selection_" + props.group_id + '_' + props.selection.id}>
-                    <div className="info col-span-8 text-amber-900 text-xs py-2"></div>
-                    {props.selection.choices.map((choice: any) => (
-                        <div key={choice.key} className="w-full grid grid-cols-8 gap-4 items-center mt-2">
+                <div className={"w-full selection selection_" + props.group_id + '_' + props.selection.id}>
+                    <div className="warning col-span-8 text-amber-900 text-xs my-2"></div>
+                    {props.selection.choices.map((choice: any, index: number) => (
+                        <div key={choice.key} className={classNames("w-full grid grid-cols-8 gap-4 items-center", index !== 0 ? "mt-2" : "")}>
                             {addChoiceByName(baseName + choice.key, choice)}
                             <Select
                                 name={baseName + choice.key}
