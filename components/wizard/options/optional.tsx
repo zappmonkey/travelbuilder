@@ -1,7 +1,7 @@
 import Print from "@/components/ui/dev/print";
 import WizardHandler from "@/lib/wizard/handler";
 import {SimpleInput} from "@/lib/wizard/input";
-import {classNames, dateFormat, dateToHumanReadable, empty, getIsoDate, getTodayIsoDate} from "@/lib/utils/methods";
+import {classNames, dateToHumanReadable, empty, getIsoDate} from "@/lib/utils/methods";
 import Select, {Option} from "@/components/form/element/select";
 import Selections from "@/components/wizard/selections/selections";
 import {ChevronRightIcon} from "@heroicons/react/24/outline";
@@ -63,13 +63,13 @@ export default function Optional(props: Props)
         return elementsWithSelections;
     }
 
-    const addGroupWithSelections = function(group_id: number) {
+    const addGroupWithSelections = function(group_id: number): void {
         const group = document.querySelector('.group_' + group_id);
         let groupAdded: boolean = false;
         const elementsAdded: number[] = [];
         const selectionAdded: number[] = [];
+        let groupSelection: Group;
         if (group) {
-            let groupSelection: any = {};
             let hasWarning = false;
             group.querySelectorAll('.selection .warning').forEach(warning => {
                 if (!empty(warning.textContent)) {
@@ -90,9 +90,13 @@ export default function Optional(props: Props)
                             id: group_id,
                             date: undefined,
                             duration: undefined,
+                            participants: [],
                             elements: [],
                         }
                         groupAdded = true;
+                    }
+                    if (groupSelection === undefined) {
+                        return;
                     }
                     switch (name) {
                         case 'duration':
@@ -110,7 +114,7 @@ export default function Optional(props: Props)
                                 let element: any = {
                                     id: elementId,
                                     selections: [{
-                                        id: selectionId,
+                                        group_id: selectionId,
                                         choices: [{
                                             key: choice,
                                             amount: Number(value),
@@ -125,21 +129,21 @@ export default function Optional(props: Props)
                                     if (groupSelection.elements[elementIndex].id === elementId) {
                                         if (selectionAdded.includes(selectionId)) {
                                             for (const selectionIndex in groupSelection.elements[elementIndex].selections) {
-                                                if (groupSelection.elements[elementIndex].selections[selectionIndex].id === selectionId) {
+                                                if (groupSelection.elements[elementIndex].selections[selectionIndex].group_id === selectionId) {
                                                     groupSelection.elements[elementIndex].selections[selectionIndex].choices.push({
-                                                        key: choice,
+                                                        key: choice.toString(),
                                                         amount: Number(value),
                                                     })
                                                 }
                                             }
                                         } else {
                                             groupSelection.elements[elementIndex].selections.push({
-                                                id: selectionId,
+                                                group_id: selectionId,
                                                 choices: [{
-                                                    key: choice,
+                                                    key: choice.toString(),
                                                     amount: Number(value),
                                                 }],
-                                            })
+                                            } as Selection)
                                             selectionAdded.push(selectionId);
                                         }
                                     }
@@ -149,8 +153,22 @@ export default function Optional(props: Props)
                     }
 
                 });
-                console.log(groupSelection);
             }
+        }
+        // @ts-ignore
+        if (groupSelection !== undefined) {
+            let groupUpdated: boolean = false;
+            for (const groupIndex in props.input.groups) {
+                const group = props.input.groups[groupIndex];
+                if (group.id == groupSelection.id) {
+                    props.input.groups[groupIndex] = groupSelection;
+                    groupUpdated = true;
+                }
+            }
+            if (!groupUpdated) {
+                props.input.groups.push(groupSelection);
+            }
+            props.handler.update(props.input);
         }
     }
 

@@ -1,4 +1,4 @@
-import {defaultSession, getSession, storeSession} from "@/lib/utils/session";
+import {defaultSession, getSession, session, storeSession} from "@/lib/utils/session";
 
 export type SimpleInput = {
     type: string
@@ -12,6 +12,7 @@ export type SimpleInput = {
     babies: number
     step: number
     calls: string[]
+    groups: Group[]
 }
 
 export class InputSimple {
@@ -26,6 +27,7 @@ export class InputSimple {
     babies: number = 0;
     step: number = 1;
     calls: string[] = [];
+    groups: Group[] = [];
 
     json(): SimpleInput
     {
@@ -41,6 +43,7 @@ export class Input {
     _duration: number|undefined = undefined;
     _ages: number[]|undefined = undefined;
     _step: number = 1;
+    private _groups: Group[] = [];
 
     constructor(id: number, type: string = 'PACKAGE') {
         this._id = id;
@@ -155,6 +158,28 @@ export class Input {
         this._step = value;
     }
 
+    get groups(): Group[] {
+        return this._groups;
+    }
+
+    set groups(value: Group[]) {
+        this._groups = value;
+    }
+
+    addGroup(newGroup: Group): void {
+        let groupUpdated: boolean = false;
+        for (const groupIndex in this._groups) {
+            const group = this._groups[groupIndex];
+            if (group.id == newGroup.id) {
+                this._groups[groupIndex] = newGroup;
+                groupUpdated = true;
+            }
+        }
+        if (!groupUpdated) {
+            this._groups.push(newGroup);
+        }
+    }
+
     simple(): SimpleInput
     {
         let input = JSON.parse(JSON.stringify(this))
@@ -170,6 +195,7 @@ export class Input {
         simple.children = this.children;
         simple.babies = this.babies
         simple.step  = this.step;
+        simple.groups  = this.groups;
         return simple.json();
     }
 }

@@ -14,7 +14,7 @@ export async function POST(
     input.date = json.date;
     input.display_date = json.display_date;
     input.step = json.step;
-
+    input.groups = json.groups;
     let calls = json.calls;
     // if (input.date !== undefined) {
     //     calls.push("book_check");
@@ -40,9 +40,12 @@ export async function POST(
         "dates_around": 20,
         "duration": input.duration,
         "durations_around": undefined,
-        "calls": calls
+        "calls": calls,
+        "groups": input.groups
     };
+    console.log(JSON.stringify(wizardRequest));
     let data = await wizard(wizardRequest);
+    console.log(JSON.stringify(data));
     return new Response(JSON.stringify({
         "input": input.simple(),
         "data": data

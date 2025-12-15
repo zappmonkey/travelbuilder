@@ -10,4 +10,5 @@ export interface WizardRequest {
     duration: number|undefined;
     durations_around: number|undefined;
     calls: string[]
+    groups: Group[]
 }
