@@ -202,16 +202,33 @@ export class Input {
 
 export async function initInput(id: number, display_date: string, display_duration: number): Promise<SimpleInput>
 {
-    const input = new Input(Number(id));
-    await input.read()
-    let date = input.date;
-    let duration = input.duration;
-    if (date === undefined) {
-        input.display_date = display_date;
+    try {
+        const input = new Input(Number(id));
+        await input.read()
+        let date = input.date;
+        let duration = input.duration;
+        if (date === undefined) {
+            input.display_date = display_date;
+        }
+        if (duration === undefined) {
+            input.duration = display_duration;
+        }
+        await input.write();
+        return input.simple();
+    } catch (error) {}
+
+    return {
+        id: id,
+        display_date: display_date,
+        duration: display_duration.toString(),
+        ages: [30, 30],
+        adults: 2,
+        children: 0,
+        babies: 0,
+        step: 1,
+        groups: [],
+        calls: [],
+        date: '',
+        type: "PACKAGE",
     }
-    if (duration === undefined) {
-        input.duration = display_duration;
-    }
-    await input.write();
-    return input.simple();
 }

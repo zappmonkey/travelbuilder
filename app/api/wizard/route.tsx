@@ -43,9 +43,8 @@ export async function POST(
         "calls": calls,
         "groups": input.groups
     };
-    console.log(JSON.stringify(wizardRequest));
     let data = await wizard(wizardRequest);
-    console.log(JSON.stringify(data));
+
     return new Response(JSON.stringify({
         "input": input.simple(),
         "data": data

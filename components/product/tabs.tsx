@@ -5,7 +5,7 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 import Print from "@/components/ui/dev/print";
 import {GenericContent} from "@/interface/content";
 import Wizard from "@/components/wizard";
-import {initInput, Input} from "@/lib/wizard/input";
+import {initInput} from "@/lib/wizard/input";
 import WizardNew from "@/components/wizard_new";
 
 
@@ -26,7 +26,7 @@ export default async function ProductTabs(props: Props)
             children: <WizardNew
                 product={props.product}
                 generic={props.generic}
-                input={(await initInput(props.product.id, props.product.prices.lowest.date, props.product.prices.lowest.duration))}
+                input={await initInput(props.product.id, props.product.prices.lowest.date, props.product.prices.lowest.duration)}
             />
         },
         {

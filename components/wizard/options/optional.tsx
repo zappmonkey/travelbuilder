@@ -23,6 +23,32 @@ export default function Optional(props: Props)
             selectedComponents.push(component);
         }
     }
+    const groupInput = (group_id: number) => {
+        if (props.input.groups.length > 0) {
+            for (const group of props.input.groups) {
+                if (group.id === group_id) {
+                    return group;
+                }
+            }
+        }
+        return undefined;
+    }
+
+    const groupDuration = (group_id: number) => {
+        const group = groupInput(group_id)
+        if (group) {
+            return group.duration?.toString();
+        }
+        return "";
+    }
+    const groupDate = (group_id: number) => {
+        const group = groupInput(group_id)
+        if (group) {
+            return group.date;
+        }
+        return "";
+    }
+
     const getDurationOptions = (min: number, max: number): Option[] => {
         const options: Option[] = [];
         for (let d = min; d <= max; d++) {
@@ -61,6 +87,20 @@ export default function Optional(props: Props)
             }
         }
         return elementsWithSelections;
+    }
+
+    const removeGroup = function(group_id: number): void {
+        let groupRemoved: boolean = false;
+        for (const groupIndex in props.input.groups) {
+            const group = props.input.groups[groupIndex];
+            if (group.id == group_id) {
+                props.input.groups.splice(Number(groupIndex), 1);
+                groupRemoved = true;
+            }
+        }
+        if (groupRemoved) {
+            props.handler.update(props.input);
+        }
     }
 
     const addGroupWithSelections = function(group_id: number): void {
@@ -151,7 +191,6 @@ export default function Optional(props: Props)
                             }
                             break;
                     }
-
                 });
             }
         }
@@ -185,19 +224,18 @@ export default function Optional(props: Props)
                                     <Select
                                         name="date"
                                         options={getDateOptions(group.dates)}
-                                        value={props.input.adults.toString()}
+                                        value={groupDate(group.id)}
                                         label={'Vanaf wanneer wil je verblijven?'}
                                         className="col-span-1 mt-2"
-                                        onChange={(value: string) => props.handler.onChangeAdults(value)}
                                     />
                                 : null}
                                 {group.min_duration != group.max_duration ?
                                     <Select
                                         name="duration"
                                         options={getDurationOptions(group.min_duration, group.max_duration)}
-                                        value={props.input.adults.toString()} label={'Hoe lang wil je verblijven?'}
+                                        value={groupDuration(group.id)}
+                                        label={'Hoe lang wil je verblijven?'}
                                         className="col-span-1 mt-2"
-                                        onChange={(value: string) => props.handler.onChangeAdults(value)}
                                     />
                                 : null}
                             </div>
@@ -208,11 +246,11 @@ export default function Optional(props: Props)
                                     </div>
                                 )) : null}
                             </div>))}
-                            {group.active ?
+                            {group.selected ?
                                 <button
-                                    // onClick={() => props.handler.nextStep()}
+                                    onClick={() => removeGroup(group.id)}
                                     type="button"
-                                    className="inline-flex items-center justify-center gap-x-2 rounded-md bg-nrv-orange px-3.5 my-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-nrv-orange/90 focus-visible:outline-2 focus-visible:outline-offset-2 w-40"
+                                    className="mt-4 inline-flex items-center justify-center gap-x-2 rounded-md bg-nrv-orange px-3.5 my-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-nrv-orange/90 focus-visible:outline-2 focus-visible:outline-offset-2 w-40"
                                 >
                                     <MinusIcon aria-hidden="true" className="-mr-0.5 size-5" />
                                     Verwijderen
@@ -221,13 +259,12 @@ export default function Optional(props: Props)
                                 <button
                                     onClick={() => addGroupWithSelections(group.id)}
                                     type="button"
-                                    className="inline-flex items-center justify-center gap-x-2 rounded-md bg-nrv-orange px-3.5 my-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-nrv-orange/90 focus-visible:outline-2 focus-visible:outline-offset-2 w-40"
+                                    className="mt-4 inline-flex items-center justify-center gap-x-2 rounded-md bg-nrv-orange px-3.5 my-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-nrv-orange/90 focus-visible:outline-2 focus-visible:outline-offset-2 w-40"
                                 >
                                     <PlusIcon aria-hidden="true" className="-mr-0.5 size-5" />
                                     Toevoegen
                                 </button>
                             }
-
                         </div>
                     ))}
                 </div>

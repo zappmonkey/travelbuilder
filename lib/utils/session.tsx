@@ -9,7 +9,7 @@ export const defaultSession: SessionData = {
 }
 
 export const session = nextAppSession<SessionData>({
-    name: '__zs_session__',
+    name: '__grip_sess__',
     secret: 'Ex84qrM93z5MzuxyNCIOYNfh3v9Yct87',
 });
 

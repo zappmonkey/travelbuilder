@@ -11,11 +11,9 @@ export default class WizardHandler {
     // @ts-ignore
     #input: SimpleInput;
     #data: any = {};
-    #self: WizardHandler;
 
     constructor(input: SimpleInput) {
         this.#input = input;
-        this.#self = this;
     }
 
     init(): void

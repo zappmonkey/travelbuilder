@@ -112,7 +112,7 @@ export default function Receipt(props: Props)
                                     {item.description}
                                 </div>
                                 <div className="col-span-1 text-right">
-                                    {!empty(item.price) ? item.price : null}
+                                    {!empty(item.price) && item.price.total > 0 ? item.price.total : null}
                                 </div>
                             </div>
                         )) : null}
