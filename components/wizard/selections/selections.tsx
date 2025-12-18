@@ -95,6 +95,46 @@ export default function Selections(props: Props)
         amountChoice = true;
     }
 
+    let selectedChoice: any;
+    const checkSelectionChoice = (group_id: number, element_id: number, selection_id: number, choice: any) => {
+        let hasSelections = false;
+        if (group_id == 0) {
+            //TODO check product selections (element)
+        } else {
+            if (!empty(props.input.groups)) {
+                for (const group of props.input.groups) {
+                    if (group.id == group_id) {
+                        for (const element of group.elements) {
+                            if (element.id == element_id) {
+                                for (const selection of element.selections) {
+                                    if (selection.group_id == selection_id) {
+                                        hasSelections = true;
+                                        for (const inputChoice of selection.choices) {
+                                            if (inputChoice.key == choice.key) {
+
+                                                choice.selected = true;
+                                                choice.amount = inputChoice.amount;
+                                                selectedChoice = choice;
+                                                console.log(inputChoice, choice, selectedChoice)
+                                                return null;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (hasSelections) {
+            choice.selected = false;
+            choice.amount = 0;
+        }
+        selectedChoice = choice;
+        return null;
+
+    }
     return (
         <div className={classNames(props.className ? props.className : "", "w-full")}>
             <h4 className="text-sm/6 font-medium text-gray-600 w-full">{props.selection.label}</h4>
@@ -104,10 +144,15 @@ export default function Selections(props: Props)
                     {props.selection.choices.map((choice: any, index: number) => (
                         <div key={choice.key} className={classNames("w-full grid grid-cols-8 gap-4 items-center", index !== 0 ? "mt-2" : "")}>
                             {addChoiceByName(baseName + choice.key, choice)}
+                            {checkSelectionChoice(props.group_id, getElementId(props.selection), props.selection.id, choice)}
                             <Select
                                 name={baseName + choice.key}
                                 options={getAmountOptions(0, choice.max)}
-                                value={choice.amount ? choice.amount.toString() : '0'}
+                                value={
+                                    selectedChoice.amount
+                                    ? selectedChoice.amount.toString()
+                                    : '0'
+                                }
                                 allowEmpty={false}
                                 className="col-span-1"
                                 onChange={(value: string) => {

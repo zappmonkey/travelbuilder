@@ -5,7 +5,7 @@ import {classNames, dateToHumanReadable, empty, getIsoDate} from "@/lib/utils/me
 import Select, {Option} from "@/components/form/element/select";
 import Selections from "@/components/wizard/selections/selections";
 import {ChevronRightIcon} from "@heroicons/react/24/outline";
-import {MinusIcon, PlusIcon} from "@heroicons/react/20/solid";
+import {CheckIcon, MinusIcon, PlusIcon} from "@heroicons/react/20/solid";
 
 type Props = {
     handler: WizardHandler,
@@ -218,6 +218,7 @@ export default function Optional(props: Props)
                     <h2 className="col-span-4 text-nrv-orange font-medium">{component.name}</h2>
                     {component.groups.map((group: any) => (
                         <div key={group.id} className={"col-span-4 grid grid-cols-4 group_" + group.id}>
+                            {/*<Print context={group}/>*/}
                             <h3 className="col-span-4 mt-4 text-gray-800">{group.name}</h3>
                             <div className="col-span-4 grid grid-cols-4 selection">
                                 {group.dates && group.dates.length > 1 ?
@@ -246,15 +247,24 @@ export default function Optional(props: Props)
                                     </div>
                                 )) : null}
                             </div>))}
-                            {group.selected ?
-                                <button
-                                    onClick={() => removeGroup(group.id)}
-                                    type="button"
-                                    className="mt-4 inline-flex items-center justify-center gap-x-2 rounded-md bg-nrv-orange px-3.5 my-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-nrv-orange/90 focus-visible:outline-2 focus-visible:outline-offset-2 w-40"
-                                >
-                                    <MinusIcon aria-hidden="true" className="-mr-0.5 size-5" />
-                                    Verwijderen
-                                </button>
+                            {group.selected ?<>
+                                    <button
+                                        onClick={() => removeGroup(group.id)}
+                                        type="button"
+                                        className="mt-4 inline-flex items-center justify-center gap-x-2 rounded-md bg-gray-500 px-3.5 my-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-nrv-orange/90 focus-visible:outline-2 focus-visible:outline-offset-2 w-40"
+                                    >
+                                        <MinusIcon aria-hidden="true" className="-mr-0.5 size-5" />
+                                        Verwijderen
+                                    </button>
+                                    <button
+                                        onClick={() => addGroupWithSelections(group.id)}
+                                        type="button"
+                                        className="mt-4 inline-flex items-center justify-center gap-x-2 rounded-md bg-nrv-orange px-3.5 my-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-nrv-orange/90 focus-visible:outline-2 focus-visible:outline-offset-2 w-40"
+                                    >
+                                        <CheckIcon aria-hidden="true" className="-mr-0.5 size-5" />
+                                        Aanpassen
+                                    </button>
+                                </>
                             :
                                 <button
                                     onClick={() => addGroupWithSelections(group.id)}
