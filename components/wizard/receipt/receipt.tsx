@@ -71,6 +71,16 @@ export default function Receipt(props: Props)
                     <div className="grid grid-cols-10 gap-1 p-4 flex items-center">
                     <h3 className="text-nrv-orange font-medium col-span-10">Vervoer</h3>
                     {props.booking.order.transportation.map((line: any, index: number) => (
+                        line.type != 'AUTOHUUR' ? <div key={index} className="grid grid-cols-10 gap-1 col-span-10 items-center justify-center text-xs">
+                            {!transportShown.includes(line.type) && transportShown.push(line.type) ? <h4 className="col-span-10 mt-2 font-medium text-xs">Vluchten</h4> : null}
+                            <div className="col-span-8 capitalize">{line.start.name} - {line.end.name}</div>
+                            <div className="col-span-2">
+                                {line.number}
+                            </div>
+                            <div className="col-span-10 capitalize italic text-gray-600">{dateTimeToHumanReadable(line.start.date)} - {dateTimeToHumanReadable(line.end.date)}</div>
+                        </div>: null
+                    ))}
+                    {props.booking.order.transportation.map((line: any, index: number) => (
                         line.type == 'AUTOHUUR' ? <div key={index} className="grid grid-cols-10 gap-1 col-span-10 items-center justify-center text-xs">
                             {!transportShown.includes(line.type) && transportShown.push(line.type) ? <h4 className="col-span-10 font-medium mt-2 text-xs">Huurauto</h4> : null}
                             <div className="col-span-2">
@@ -83,14 +93,7 @@ export default function Receipt(props: Props)
                             </div>
                             <div className="col-span-4 capitalize">{line.end.name}</div>
                             <div className="col-span-4 capitalize text-right italic text-gray-600">{dateToHumanReadable(line.end.date)}</div>
-                        </div>: <div key={index} className="grid grid-cols-10 gap-1 col-span-10 items-center justify-center text-xs">
-                            {!transportShown.includes(line.type) && transportShown.push(line.type) ? <h4 className="col-span-10 mt-2 font-medium text-xs">Vluchten</h4> : null}
-                            <div className="col-span-8 capitalize">{line.start.name} - {line.end.name}</div>
-                            <div className="col-span-2">
-                                {line.number}
-                            </div>
-                            <div className="col-span-10 capitalize italic text-gray-600">{dateTimeToHumanReadable(line.start.date)} - {dateTimeToHumanReadable(line.end.date)}</div>
-                        </div>
+                        </div>: null
                     ))}
                 </div>: null}
                 <h3 className="text-nrv-orange font-medium p-4 -mb-6">Overzicht</h3>
