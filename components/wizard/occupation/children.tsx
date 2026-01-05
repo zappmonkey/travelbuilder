@@ -14,14 +14,17 @@ export default function Children(props: Props)
     let value: number;
     let label: string;
     [...Array(6)].map((_, i) => {
-        value = i + 1;
-        label = "kind";
+        value = i;
+        label =  value + " kind";
+        if (value == 0) {
+            label = "Geen kinderen";
+        }
         if (value > 1) {
-            label = "kinderen";
+            label = value + " kinderen";
         }
         children.push({
             value: value.toString(),
-            label: value + " " + label,
+            label: label,
         })
     })
 

@@ -3,6 +3,7 @@ import {ChevronRightIcon, ChevronLeftIcon} from "@heroicons/react/24/outline";
 import {useState} from "react";
 import {PriceModel} from "@/interface/wizard/price/price";
 import WizardHandler from "@/lib/wizard/handler";
+import Print from "@/components/ui/dev/print";
 
 type Props = {
     label?: string
@@ -110,6 +111,7 @@ export default function Calendar(props: Props) {
     const month = getMonth(displayDate, selectDate, prices)
     return (
         <div className={props.className ? props.className : ''}>
+            <Print context={props.prices}/>
             <div className="bg-white min-w-[320px] w-full z-20 p-2 rounded-lg ring-1 ring-gray-200 shadow-sm">
                 <section key={month.name} className="text-center">
                     <h2 className="text-sm font-semibold text-gray-900 flex items-center justify-between">
